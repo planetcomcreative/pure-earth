@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% block pagetitle %}{{ sitename }}{% endblock %}</title>
+    {% block stylesheets %}
+        {% block bootstrapStyles %}
+            <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+                  integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+                  crossorigin="anonymous">
+            <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+        {% endblock %}
+        {% block siteStyles %}
+            <link rel="stylesheet" href="{{ asset('/bundles/nspurearth/css/fonts.css') }}"/>
+            <link rel="stylesheet" href="{{ asset('/bundles/nspurearth/css/main.css') }}"/>
+            <link rel="stylesheet" media="print" href="{{ asset('/bundles/nspurearth/css/print.css') }}"/>
+        {% endblock %}
+        {% block pageStyles %}{% endblock %}
+    {% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    {% block metas %}{% endblock %}
+    <!-- Facebook Pixel Code -->
+    <script>
+        !function(f, b, e, v, n, t, s)
+        {
+            if(f.fbq)
+            {
+                return;
+            }
+            n = f.fbq = function()
+            {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if(!f._fbq)
+            {
+                f._fbq = n;
+            }
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+
+        fbq('init', '228757661014405');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1"
+             src="https://www.facebook.com/tr?id=228757661014405&ev=PageView
+&noscript=1"/>
+    </noscript>
+    <!-- End Facebook Pixel Code -->
+</head>
+<body class="{% block bodyClass %}basic{% endblock %}">
+<script>
+    (function(i, s, o, g, r, a, m)
+    {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function()
+        {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-96937364-1', 'auto');
+    ga('send', 'pageview');
+</script>
+{% block header %}
+    <header class="clearfix">
+        <h1 class="col-xs-8 col-sm-4"><a href="{{ url('homepage') }}"><img
+                        src="{{ asset('bundles/nspurearth/images/logo.png') }}" alt="{{ sitename }}"/></a></h1>
+        <div class="col-xs-12 col-sm-8">
+            <div class="socialLinks">
+                {% block socialLinks %}
+                    <a href="https://www.facebook.com/Purearth-Organics-273850232663950/" title="Find us on Facebook"
+                       target="_blank"><i class="fa fa-facebook-official"></i></a>
+                {% endblock %}
+            </div>
+            <nav class="infoMenu">
+                {% block infoMenuLinks %}
+                    {{ knp_menu_render('frontend_top_menu', {'template': 'NSPurearthBundle:Menu:main_menu.html.twig'}) }}
+                {% endblock %}
+                {% if is_granted('ROLE_CUSTOMER') %}
+                    <a href="{{ path('logout') }}">Log out</a>
+                {% else %}
+                    <a href="{{ path('login') }}">Login</a>
+                {% endif %}
+            </nav>
+            <nav class="mainMenu">
+                {% block mainMenuLinks %}
+                    {{ knp_menu_render('frontend_main_menu', {'template': 'NSPurearthBundle:Menu:main_menu.html.twig'}) }}
+                {% endblock %}
+            </nav>
+        </div>
+    </header>
+{% endblock %}
+<main class="clearfix">
+    {% block main %}
+        {% block contentTitle %}
+            <h1 class="pageTitle clearfix"><span
+                        class="col-xl-offset-2 col-xs-6">{% block title %}Page Title{% endblock %}</span></h1>
+        {% endblock %}
+        {% block contentImage %}{% endblock %}
+        <div class="clearfix">
+            {% block mobileCart %}
+                <div class="visible-xs">
+                    {{ render(controller('NSPurearthBundle:Cart:quickView')) }}
+                </div>
+            {% endblock %}
+            <section class="col-sm-12 col-md-9 col-xl-7 col-xl-offset-2" id="mainContent">
+                {% block messages %}
+                    <div class="messages clearfix">
+                        <div class="col-sm-9">
+                            {% for flashMessage in app.session.flashbag.get('error') %}
+                                <div class="alert alert-block alert-danger">
+                                    <button type="button" class="close" data-dismiss="alert">
+                                        <i class="fa fa-remove"></i>
+                                    </button>
+                                    <i class="icon-remove red"></i>
+                                    {{ flashMessage.header ? ('<h3>'~flashMessage.header~'</h3>')|raw : '' }}
+                                    {{ flashMessage.title? ('<h4>'~flashMessage.title~'</h4>')|raw : '' }}
+                                    <p>{{ flashMessage.message }}</p>
+                                </div>
+                            {% endfor %}
+                            {% for flashMessage in app.session.flashbag.get('warning') %}
+                                <div class="alert alert-block alert-warning">
+                                    <button type="button" class="close" data-dismiss="alert">
+                                        <i class="icon-remove"></i>
+                                    </button>
+                                    <i class="icon-ok green"></i>
+                                    {{ flashMessage.header ? ('<h3>'~flashMessage.header~'</h3>')|raw : '' }}
+                                    {{ flashMessage.title? ('<h4>'~flashMessage.title~'</h4>')|raw : '' }}
+                                    <p>{{ flashMessage.message }}</p>
+                                </div>
+                            {% endfor %}
+                            {% for flashMessage in app.session.flashbag.get('success') %}
+                                <div class="alert alert-block alert-success">
+                                    <button type="button" class="close" data-dismiss="alert">
+                                        <i class="fa fa-remove"></i>
+                                    </button>
+                                    <i class="icon-ok green"></i>
+                                    {{ flashMessage.header ? ('<h3>'~flashMessage.header~'</h3>')|raw : '' }}
+                                    {{ flashMessage.title? ('<h4>'~flashMessage.title~'</h4>')|raw : '' }}
+                                    <p>{{ flashMessage.message }}</p>
+                                </div>
+                            {% endfor %}
+                            {% for flashMessage in app.session.flashbag.get('message') %}
+                                <div class="alert alert-block">
+                                    <button type="button" class="close" data-dismiss="alert">
+                                        <i class="icon-remove"></i>
+                                    </button>
+                                    <i class="icon-ok green"></i>
+                                    {{ flashMessage.header ? ('<h3>'~flashMessage.header~'</h3>')|raw : '' }}
+                                    {{ flashMessage.title? ('<h4>'~flashMessage.title~'</h4>')|raw : '' }}
+                                    <p>{{ flashMessage.message }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endblock %}
+                {% block body %}{% endblock %}
+            </section>
+            <aside class="col-sm-12 col-md-3 col-xl-2 rightCol">
+                {% block rightCol %}
+                    {% block blogSearch %}
+                    {% endblock %}
+                    {% block blogRecent %}
+                    {% endblock %}
+                    {% block quickCart %}
+                        {{ render(controller('NSPurearthBundle:Cart:quickView')) }}
+                    {% endblock %}
+                    {% block newsletter_register %}
+                        {% if not app.user or not app.user.isSubscribed %}
+                        <div class="register promoBox newsletter">
+                            {% include('NSPurearthBundle:Homepage:newsletter_sidebar.html.twig') %}
+                        </div>
+                        {% endif %}
+                    {% endblock %}
+                    {% block register %}
+                        <div class="register promoBox">
+                            <div class="registerHeader">
+                                <img src="{{ asset('/bundles/nspurearth/images/beets.jpg') }}"
+                                     alt="Membership can't be beet!"/>
+                            </div>
+                            <h3>My Purearth</h3>
+                            {% if is_granted('ROLE_CUSTOMER') %}
+                                <p>Welcome, {{ app.user.firstName }}</p>
+                                <form>
+                                    <p><a href="{{ url('customer_dashboard') }}" class="btn">My Account</a></p>
+                                    <p><a href="{{ url('logout') }}" class="btn btn-purple">Log out</a></p>
+                                </form>
+                            {% else %}
+                                <form method="POST" action="{{ url('login_check') }}">
+                                    <div class="form-group">
+                                        <label class="sr-only" for="username">Email Address</label>
+                                        <input class="form-control auto" type="email" id="username"
+                                               placeholder="Email address" name="_username"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="sr-only" for="password">Password</label>
+                                        <input class="form-control auto" type="password" id="password"
+                                               placeholder="Password" name="_password"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn">Login</button> &nbsp; &nbsp; &nbsp;
+                                        <a class="btn btn-purple" href="{{ path('register') }}">Register</a>
+                                    </div>
+                                </form>
+                            {% endif %}
+                        </div>
+                    {% endblock %}
+                {% endblock %}
+            </aside>
+        </div>
+    {% endblock %}
+    {% block promo %}
+    {% endblock %}
+</main>
+{% block footer %}
+    <footer class="clearfix">
+        <div class="col-xs-12 col-sm-offset-2 col-sm-2 col-xs-7 col-xs-offset-2">
+            <nav>
+                {{ block('infoMenuLinks') }}
+            </nav>
+        </div>
+        <div class="col-xs-12 col-sm-3">
+            <nav>
+                {{ block('mainMenuLinks') }}
+            </nav>
+        </div>
+        <div class="col-xs-12 col-sm-3">
+            {% block footerContent %}
+                <p>&copy; {{ 'now'|date('Y') }} Purearth Organics<br/>
+                    All rights reserved.</p>
+                <p>Designed by <a href="http://www.nobletdesign.com" target="_blank">the Noblet Design Group</a>.</p>
+            {% endblock %}
+        </div>
+    </footer>
+{% endblock %}
+{% block signup_modal %}
+    {% if not app.session.get('disablePrompt', false) and (not app.user or not app.user.isSubscribed) %}
+        <div class="modal fade" tabindex="-1" role="dialog" id="signup">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span>
+                        </button>
+                        <form action="//purearthorganics.us4.list-manage.com/subscribe/post?u=0fc78a81345b1d9d491990d61&amp;id=6de5394888"
+                              method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form"
+                              class="validate"
+                              target="_blank"
+                              novalidate>
+                            <h3>Get all the Juice!</h3>
+                            <p>Would you like to know about new classes? Recipes and other healthy and helpful tidbits?</p>
+                            <p><strong>Get our newsletter!</strong></p>
+                            {% if not is_granted('ROLE_CUSTOMER') %}
+                                <div class="form-group">
+                                    <label class="sr-only" for="mce-FNAME">First Name</label>
+                                    <input class="form-control auto" type="text" id="mce-FNAME" name="FNAME"
+                                           placeholder="First Name"/>
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="mce-LNAME">Last Name</label>
+                                    <input class="form-control auto" type="text" name="LNAME" id="mce-LNAME"
+                                           placeholder="Last Name"/>
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="mce-EMAIL">Email Address</label>
+                                    <input class="form-control auto" type="email" name="EMAIL" id="mce-EMAIL"
+                                           placeholder="Email Address"/>
+                                </div>
+                            {% endif %}
+                            <div id="mce-responses" class="clear">
+                                <div class="response" id="mce-error-response" style="display:none"></div>
+                                <div class="response" id="mce-success-response" style="display:none"></div>
+                            </div>
+                            <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                            <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text"
+                                                                                                      name="b_0fc78a81345b1d9d491990d61_c591aad34f"
+                                                                                                      tabindex="-1"
+                                                                                                      value="">
+                            </div>
+                            <div class="form-group">
+                                {% if not is_granted('ROLE_CUSTOMER') %}
+                                    <button id="modal_newsletter_subscribe" type="submit" class="btn"
+                                            data-type="{{ constant('NS\\Purearth\\Stats\\Signup::TYPE_MODAL') }}">
+                                        Subscribe
+                                    </button>
+                                {% else %}
+                                    <button id="modal_newsletter_resubscribe" data-href="{{ path('subscribe') }}"
+                                            class="btn"
+                                            data-type="{{ constant('NS\\Purearth\\Stats\\Signup::TYPE_MODAL') }}">
+                                        Subscribe
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+{% block javascripts %}
+{% block jqueryScripts %}
+    <script src="//code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+            crossorigin="anonymous"></script>
+{% endblock %}
+{% block bootstrapScripts %}
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+            crossorigin="anonymous"></script>
+{% endblock %}
+{% block siteScripts %}
+    <script>
+        grecaptcha.execute();
+
+    </script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script src="{{ asset('bundles/nscoloradmin/js/plugins/masked-input.min.js') }}"></script>
+    <script src="{{ asset('bundles/nspurearth/js/main.js') }}"></script>
+    <script src="{{ asset('bundles/nspurearth/js/cart.js') }}"></script>
+{% endblock %}
+    {% block pageScripts %}{% endblock %}
+{% endblock %}
+</body>
+</html>

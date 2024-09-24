@@ -1,0 +1,15 @@
+{% extends 'NSPurearthBundle::layout.html.twig' %}
+{% block title %}
+    Confirm your account
+{% endblock %}
+{% block bodyClass %}profile{% endblock %}
+{% block body %}
+    <h3>Thank you for choosing Purearth Organics!</h3>
+    <h4>There's just one more step to complete.</h4>
+    <div class="row">
+        <div class="col-sm-10">
+            <p>We need to confirm that you're a real-live human being.  You should receive an email with a link to follow to confirm your account - just click that link, and you'll be ready to go.</p>
+            <p><a href="{{ path('confirmation_resend') }}">Resend my confirmation email.</a></p>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,13 @@
+NS\Purearth\User\User:
+  admin:
+    lastName: Admin
+    firstName: Admin
+    email: tndg@nobletdesign.com
+    admin: 1
+    plainPassword: 2sidedbrain
+  purearth:
+    lastName: PEO
+    firstName: Purearth Organics
+    email: purearth@telus.net
+    admin: 1
+    plainPassword: 1234567

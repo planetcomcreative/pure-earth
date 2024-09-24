@@ -1,0 +1,11 @@
+{% extends 'NSPurearthBundle::layout.html.twig' %}
+{% block title %}Log In{% endblock %}
+{% block body %}
+    <div class="row">
+        <form class="col-xs-12 col-sm-8 col-sm-offset-2" action="{{ path('forgotPassword') }}" method="POST">
+            <h3>Forgotten Password</h3>
+            <p>Thanks!</p>
+            <p>You will receive an email with instructions for resetting your password.</p>
+        </form>
+    </div>
+{% endblock %}

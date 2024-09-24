@@ -1,0 +1,41 @@
+NS\Purearth\Order\Payment:
+  type: entity
+  table: payments
+  entityListeners:
+    NS\PurearthBundle\Listeners\TimestampListener:
+      preUpdate: [preUpdate]
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  oneToOne:
+    order:
+      targetEntity: NS\Purearth\Order\Order
+  fields:
+    createdAt:
+      type: datetime
+    updatedAt:
+      type: datetime
+    date:
+      type: datetime
+      nullable: true
+    status:
+      type: integer
+      nullable: true
+    amount:
+      type: float
+      nullable: true
+    chargeId:
+      type: string
+    last4:
+      type: string
+      nullable: true
+    card:
+      type: string
+    cardholder:
+      type: string
+      nullable: true
+    currency:
+      type: string
+      nullable: true

@@ -1,0 +1,69 @@
+{# Form row #}
+{% block form_row %}
+    {% spaceless %}
+        <div class="form-group {% if errors|length > 0 %}form-group--has-error has-error{% endif %}{% if required %} required{% endif %}">
+            {{ form_label(form) }}
+            <div class="col-xs-12 col-sm-8">
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock form_row %}
+
+{% block checkbox_row %}
+    <div class="form-group {{ errors|length > 0 ? 'has-error has-feedback' }}">
+        {{ form_label(form) }}
+        <div class="{{ wrapper_class|default('col-sm-3') }}">
+            {{ form_widget(form) }}
+            {{ note ? ('<p>'~note~'</p>')|raw : '' }}
+            {{ form_errors(form) }}
+        </div>
+    </div>
+{% endblock %}
+{# Form label #}
+{% block form_label %}
+    {% spaceless %}
+        {% if label is not sameas(false) %}
+            {% set label_attr = label_attr|merge({'class':label_attr.class|default('')~ ' control-label col-xs-12 col-sm-4'}) %}
+            {% if errors|length > 0 %}
+                {% set label_attr = label_attr|merge({'class':label_attr.class|default('') ~ ' has-error'}) %}
+            {% endif %}
+            {% if not compound %}
+                {% set label_attr = label_attr|merge({'for': id}) %}
+            {% endif %}
+            {% if required %}
+                {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' form-control-label--required')|trim}) %}
+            {% endif %}
+            {% if label is empty %}
+                {% set label = name|humanize %}
+            {% endif %}
+            <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+            {{ label|trans({}, translation_domain) }}
+            </label>
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_label %}
+
+{# Form errors #}
+{% block form_errors %}
+    {% spaceless %}
+        {% if errors|length > 0 %}
+            {% for error in errors %}
+                <span class="help-block">{{ error.message }}</span>
+            {% endfor %}
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_errors %}
+
+{# Form widget: Input #}
+{% block form_widget %}
+    {% spaceless %}
+        {% set type = type|default('text') %}
+        {% set attr = attr|merge({'class':attr.class|default('')~ ' form-control'}) %}
+        <input type="{{ type }}"
+                {{ block('widget_attributes') }}
+                {% if form.vars.value is not empty %}value="{{ form.vars.value }}"
+                {% endif %}>
+    {% endspaceless %}
+{% endblock form_widget %}

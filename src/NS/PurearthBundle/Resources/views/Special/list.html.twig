@@ -1,0 +1,81 @@
+{% extends 'NSPurearthBundle::product_list.html.twig' %}
+{% block title %}
+Specials
+{% endblock %}
+
+{% block listTitle %}
+{% endblock %}
+
+{% block noProductsMessageText %}
+    <p>Sorry, there are no products currently on Special.</p>
+    <p>Please check back later.</p>
+{% endblock %}
+
+{% block intro %}
+    {{ render(controller('NSPurearthBundle:Default:content', {'slug':'SpecialsIntro', 'template':'NSPurearthBundle:Content:embed.html.twig'})) }}
+{% endblock %}
+
+{% block productList %}
+    <div class="productList">
+        {% for item in items %}
+            <div class="col-xs-12 item special">
+                {% set img = vich_uploader_asset(item, 'imageFile') %}
+                <div class="col-xs-12 col-sm-3">
+                    {% if img %}
+                        <img src="{{ img|imagine_filter('special_list_thumbnail') }}" alt="" />
+                    {% endif %}
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <p><strong>{{ item.name }}</strong></p>
+                    <div>
+                        {% if item.sales %}
+                            {% for sale in item.sales  %}
+                                <div>
+                                    {% if sale.unit %}
+                                    <em class="itemUnit">
+                                        {{ sale.unit }}
+                                    </em>&nbsp
+                                    {% endif %}
+                                    {% if sale.price %}
+                                    <span class="oldPrice">
+                                        ${{ sale.price }}
+                                    </span>&nbsp;
+                                    {% endif %}
+                                    {% if sale.salePrice %}
+                                    <span class="salePrice">
+                                        ${{ sale.salePrice }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        {#{% if item.price is defined %}#}
+                            {#{% if item.salePrice is defined %}#}
+                                {#<span class="oldPrice">#}
+                                            {#${{ item.price }}#}
+                                        {#</span>&nbsp;#}
+                                {#<span class="salePrice">#}
+                                            {#${{ item.salePrice }}#}
+                                        {#</span>#}
+                            {#{% else %}#}
+                                {#<span class="price">#}
+                                            {#${{ item.price }}#}
+                                        {#</span>#}
+                            {#{% endif %}#}
+                            {#{% if item.unit is defined %}#}
+                                {#<em class="itemUnit">#}
+                                    {#{{ item.unit }}#}
+                                {#</em>#}
+                            {#{% endif %}#}
+                        {#{% endif %}#}
+                    </div>
+                </div>
+                {% block itemSummary %}
+                    <div class="col-xs-12 col-sm-4 col-md-6">
+                        {{ item.description|raw }}
+                    </div>
+                {% endblock %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

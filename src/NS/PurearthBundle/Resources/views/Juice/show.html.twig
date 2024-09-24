@@ -1,0 +1,70 @@
+{% extends 'NSPurearthBundle::layout.html.twig' %}
+{% block title %}
+    Cleanses
+{% endblock %}
+
+{% block pageScripts %}
+<script type="text/javascript">
+    fbq('track', 'ViewContent', {content_name:'{{ juice.name|url_encode }}'});
+</script>
+{% endblock %}
+
+{% block body %}
+    <p>
+        <a class="btn" href="{{ path('juice_list') }}">Back to list</a>
+    </p>
+    <h3>{{ juice.name }}</h3>
+    <div class="row">
+        <div class="col-sm-6">
+            <p>{{ juice.summary }}</p>
+            {% for j in juices %}
+                <div class="form-row">
+                    <hr />
+                    {% if j.productCategory %}
+                        <h4>{{ j.productCategory }}</h4>
+                    {% endif %}
+                    {% if j.price is defined %}
+                        {% set saleprice = salePrice(j) %}
+                        {% if saleprice != j.price %}
+                            <strong>
+                                <span class="oldPrice">
+                                    ${{ j.price|number_format(2) }}
+                                </span>&nbsp;
+                                <span class="salePrice">
+                                    ${{ saleprice|number_format(2) }}
+                                </span>
+                            </strong>
+                        {% else %}
+                            <strong>
+                                <span class="price">
+                                    ${{ j.price|number_format(2) }}
+                                </span>
+                            </strong>
+                        {% endif %}
+                    {% endif %}
+                    {% if cart.getItems()[j.id] is defined %}
+                        <span class="btn disabled cartAdd">In Cart</span>
+                    {% else %}
+                        <a class="btn cartAdd" title="Add to cart" href="{{ url('cart_add', {'pid':j.id}) }}" data-productid="{{ j.id }}" data-productname="{{ juice.name }}" data-productcategory="{{ j.productCategory }}" data-productprice="{{ j.saleprice }}"><i class="fa fa-cart-plus"></i> Add to Cart</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            {#{% endif %}#}
+        </div>
+        <div class="col-sm-6">
+            {% set img = vich_uploader_asset(juice, 'imageFile') %}
+            {% if img %}
+                <img src="{{ img|imagine_filter('product_show_thumbnail') }}" alt="" />
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <hr />
+        <div class="col-xs-12">
+            {{ juice.description|raw }}
+        </div>
+    </div>
+    <p>
+        <a class="btn" href="{{ path('juice_list') }}">Back to list</a>
+    </p>
+{% endblock %}

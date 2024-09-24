@@ -1,0 +1,25 @@
+NS\Purearth\Order\CourseRegistration:
+  type: entity
+  table: course_registration
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  manyToOne:
+    order:
+      targetEntity: NS\Purearth\Order\Order
+      inversedBy: courseRegistrations
+    course:
+      targetEntity: NS\Purearth\Product\Course
+      inversedBy: courseRegistrations
+    user:
+      targetEntity: NS\Purearth\User\User
+      inversedBy: courseRegistrations
+  fields:
+    createdAt:
+      type: datetime
+    updatedAt:
+      type: datetime
+    registrantInfo:
+      type: text

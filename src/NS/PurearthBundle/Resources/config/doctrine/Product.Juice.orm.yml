@@ -1,0 +1,12 @@
+NS\Purearth\Product\Juice:
+  type: entity
+  manyToOne:
+    productCategory:
+      targetEntity: NS\Purearth\Product\ProductCategory
+      mappedBy: productCategory
+  fields:
+    bottles:
+      type: integer
+    position:
+      type: integer
+      nullable: true

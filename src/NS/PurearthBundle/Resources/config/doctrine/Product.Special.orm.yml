@@ -1,0 +1,11 @@
+NS\Purearth\Product\Special:
+  type: entity
+  repositoryClass: NS\Purearth\Product\SpecialRepository
+  fields:
+    startDate:
+      type: datetime
+    endDate:
+      type: datetime
+    sales:
+      type: object
+      nullable: true

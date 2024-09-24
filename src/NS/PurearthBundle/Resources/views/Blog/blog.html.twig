@@ -1,0 +1,17 @@
+{% extends 'NSPurearthBundle::layout.html.twig' %}
+
+{% block title %}
+    Blog
+{% endblock %}
+
+{% block blogRecent %}
+    <div class="promoBox blogRecent">
+        <form class="form-inline" method="get" action="{{ path('wp_search') }}">
+            <div class="form-group">
+                <label class="sr-only" for="blog_search">Search Blog</label>
+                <input class="form-control" type="search" name="query" id="blog_search" placeholder="Search Blog" /><button class="btn" type="submit" title="Search"><i class="fa fa-search"></i></button>
+            </div>
+        </form>
+        {{ render(controller('NSPurearthBundle:Blog:recent')) }}
+    </div>
+{% endblock %}

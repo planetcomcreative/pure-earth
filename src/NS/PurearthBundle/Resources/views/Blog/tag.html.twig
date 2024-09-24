@@ -1,0 +1,13 @@
+{% extends '@NSPurearth/Blog/blog.html.twig' %}
+
+{% block body %}
+    {% if not tagged_posts|length %}
+        <p>Sorry, there are no posts for this tag.</p>
+    {% endif %}
+    {% for id, post in tagged_posts %}
+        {% include 'NSPurearthBundle:Blog:_list_post.html.twig' with {'post':post} %}
+        {% if not loop.last %}
+            <hr />
+        {% endif %}
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends '@NSPurearth/Blog/blog.html.twig' %}
+
+{% block body %}
+
+    {% for id, post in posts %}
+        {% include 'NSPurearthBundle:Blog:_list_post.html.twig' with {'post':post} %}
+        {% if not loop.last %}
+            <hr />
+        {% endif %}
+    {% endfor %}
+    <div class="row">
+        <div class="col-xs-6">
+            {% if page > 1 %}
+            <p>
+                {% set p = page - 1 %}
+                <a href="?page={{ p }}">&larr; Previous Page</a>
+            </p>
+            {% endif %}
+        </div>
+
+    {% if page < total_pages %}
+        <div class="col-xs-6 blog_next">
+            <p>
+                {% set p = page + 1 %}
+                <a href="?page={{ p }}">Next Page &rarr;</a>
+            </p>
+        </div>
+    {% endif %}
+    </div>
+{% endblock %}

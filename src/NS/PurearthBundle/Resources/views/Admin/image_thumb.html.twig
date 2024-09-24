@@ -1,0 +1,6 @@
+{% extends 'SonataAdminBundle:CRUD:base_show_field.html.twig' %}
+
+{% block field %}
+    {% set img = vich_uploader_asset(object, 'imageFile') %}
+    <img src="{{ img|imagine_filter('admin_thumbnail') }}" alt="" />
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'NSPurearthBundle::layout.html.twig' %}
+
+{% block title %}
+    Classes
+{% endblock %}
+
+{% block pageScripts %}
+    <script type="text/javascript">
+        fbq('track', 'ViewContent', {content_name:'{{ course.name|url_encode }}'});
+    </script>
+{% endblock %}
+
+{% block body %}
+    <p>
+        <a class="btn" href="{{ path('course_list') }}">Back to list</a>
+    </p>
+    <h3>{{ course.name }}</h3>
+    {% if course.subtitle %}
+        <h4>{{ course.subtitle }}</h4>
+    {% endif %}
+    <div class="row">
+        <div class="col-xs-12">
+            <img src="{{ vich_uploader_asset(course, 'imageFile')|imagine_filter('class_thumbnail') }}" alt="" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <p><em class="itemDate">
+                    {{ course.date.format('M d, Y') }}, {{ course.startTime.format('h:i a') }} to {{ course.endTime.format('h:i a') }}
+            </em>
+                </p>
+            {{ course.description|raw }}
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            {% if course.maxSeats and course.seatsRemaining %}
+                <p><strong>{{ course.seatsRemaining/course.maxSeats <= 0.20 ? 'Only' : '' }} {{ course.seatsRemaining }} spots left.</strong></p>
+            {% endif %}
+            <strong>
+                <span class="price">
+                    {% if course.seatsRemaining <= 0 %}
+                    <s>
+                    {% endif %}
+                        {% if course.price %}
+                            ${{ course.price }}
+                        {% else %}
+                            Free!
+                        {% endif %}
+                        {% if course.seatsRemaining <= 0 %}
+                        </s> &nbsp; <span class="red">FULL!</span>
+                    {% endif %}
+                </span>
+            </strong>
+            {% if course.seatsRemaining > 0 %}
+                {% if cart.getcourses()[course.id] is defined %}
+                    <span class="btn disabled cartAdd">In Cart</span>
+                {% else %}
+                    <a class="btn cartAdd" title="Add to cart" href="{{ url('cart_add', {'pid':course.id}) }}" data-productid="{{ course.id }}" data-productname="{{ course.name }}" data-productcategory="Class" data-productprice="{{ course.price }}"><i class="fa fa-cart-plus"></i> Add to Cart</a>
+                    <p>You'll be asked for attendee contact info when you check out.</p>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    <p><a class="btn" href="{{ path('course_list') }}">Back to list</a></p>
+{% endblock %}

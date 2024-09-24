@@ -1,0 +1,10 @@
+NS\Purearth\Product\Special:
+  1:
+    name: Test Special
+    price: 9.99
+    salePrice: 6.99
+    description: This is the product description
+    summary: This is the product summary
+    unit: lb
+    gst: false
+    pst: false

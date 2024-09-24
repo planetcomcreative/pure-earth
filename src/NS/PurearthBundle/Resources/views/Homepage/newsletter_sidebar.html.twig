@@ -1,0 +1,37 @@
+<form action="//purearthorganics.us4.list-manage.com/subscribe/post?u=0fc78a81345b1d9d491990d61&amp;id=6de5394888"
+      method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank"
+      novalidate>
+    <h3>Subscribe to our newsletter</h3>
+    <p>and get all the juice!</p>
+    {% if not is_granted('ROLE_CUSTOMER') %}
+        <div class="form-group">
+            <label class="sr-only" for="mce-FNAME">First Name</label>
+            <input class="form-control auto" type="text" id="mce-FNAME" name="FNAME" placeholder="First Name"/>
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="mce-LNAME">Last Name</label>
+            <input class="form-control auto" type="text" name="LNAME" id="mce-LNAME" placeholder="Last Name"/>
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="mce-EMAIL">Email Address</label>
+            <input class="form-control auto" type="email" name="EMAIL" id="mce-EMAIL" placeholder="Email Address"/>
+        </div>
+    {% endif %}
+    <div id="mce-responses" class="clear">
+        <div class="response" id="mce-error-response" style="display:none"></div>
+        <div class="response" id="mce-success-response" style="display:none"></div>
+    </div>
+    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text"
+                                                                              name="b_0fc78a81345b1d9d491990d61_c591aad34f"
+                                                                              tabindex="-1" value=""></div>
+    <div class="form-group">
+        {% if app.user and app.user.isSubscribed %}
+            <button disabled class="btn">Subscribed!</button>
+        {% elseif not is_granted('ROLE_CUSTOMER') %}
+            <button id="newsletter_subscribe" type="submit" class="btn" data-type="{{ constant('NS\\Purearth\\Stats\\Signup::TYPE_SIDEBAR') }}">Subscribe</button>
+        {% else %}
+            <button id="newsletter_resubscribe" data-href="{{ path('subscribe') }}" class="btn" data-type="{{ constant('NS\\Purearth\\Stats\\Signup::TYPE_SIDEBAR') }}">Subscribe</button>
+        {% endif %}
+    </div>
+</form>

@@ -1,0 +1,46 @@
+{% extends 'NSPurearthBundle::layout.html.twig' %}
+{% block title %}Log in{% endblock %}
+{% block body %}
+    <div class="row">
+        {% block errors %}
+            {% if error %}
+                <div class="alert alert-danger fade in m-b-15">
+                    <strong>Error!</strong>
+                    {{ error.message }}
+                    <span class="close" data-dismiss="alert">×</span>
+                </div>
+            {% endif %}
+        {% endblock %}
+        {% block login_form %}
+        <form class="col-xs-12 col-sm-8 col-sm-offset-2" action="{% block check_url %}{{ url('login_check') }}{% endblock %}" method="POST" class="margin-bottom-0">
+            <h3>Please log in.</h3>
+            <div class="alert alert-info in m-b-15">
+                <p>
+                    <strong>Please note:</strong> If you had an account on the previous Purearth Organics website, but have not yet logged in to the new one, you will need to <a href="{{ path('forgotPassword') }}">reset your password</a>.
+                </p>
+                <p>If this is your first time logging in to the Purearth Organics website, please <a href="{{ path('register') }}">create an account</a>.</p>
+            </div>
+            <div class="form-group m-b-20">
+                <input type="email" class="form-control input-lg" value="{{ last_username }}" placeholder="Email Address" name="_username" />
+            </div>
+            <div class="form-group m-b-20">
+                <input type="password" class="form-control input-lg" placeholder="Password" name="_password" />
+            </div>
+            <div class="form-group m-b-20">
+                <a class="pull-right" href="{{ path('forgotPassword') }}">I forgot my password.</a>
+            </div>
+            {% block rememberMe %}
+                {#<div class="checkbox m-b-20">#}
+                    {#<label>#}
+                        {#<input type="checkbox" name="_remember"/> Remember Me#}
+                    {#</label>#}
+                {#</div>#}
+            {% endblock %}
+            <div class="login-buttons">
+                <button type="submit" class="btn btn-success">Sign me in</button>
+                <a class="btn btn-purple" href="{{ path('register') }}">Create Account</a>
+            </div>
+        </form>
+        {% endblock %}
+    </div>
+{% endblock %}

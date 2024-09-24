@@ -1,0 +1,24 @@
+{% extends 'NSPurearthBundle::layout.html.twig' %}
+{% block title %}Log In{% endblock %}
+{% block body %}
+    <div class="row">
+        <form class="col-xs-12 col-sm-8 col-sm-offset-2" action="{{ path('forgotPassword') }}" method="POST">
+            {% if app.session.flashbag.get('userNotFound') %}
+                <div class="alert alert-warning in m-b-15">
+                    <p>
+                        <strong>Sorry, we couldn't find that account.</strong>  Please verify that you have entered the correct email address.
+                    </p>
+                    <p>If you do not currently have an account with Purearth Organics, please <a href="{{ path('register') }}">create one</a>.</p>
+                </div>
+            {% endif %}
+            <h3>Forgotten Password</h3>
+            <p>Please enter your email address.</p>
+            <div class="form-group m-b-20">
+                <input type="text" class="form-control input-lg" placeholder="Email Address" name="_username" />
+            </div>
+            <div class="login-buttons">
+                <button type="submit" class="btn btn-success">Reset password</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

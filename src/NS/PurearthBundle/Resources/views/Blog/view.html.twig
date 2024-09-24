@@ -1,0 +1,45 @@
+{% extends '@NSPurearth/Blog/blog.html.twig' %}
+
+{% block body %}
+    <div class="blog_post">
+        {% do wordpress('setup_postdata', post) %}
+
+        <h3>{{ wordpress('get_the_title', post)|raw }}</h3>
+
+        <p class="blog_date">Posted on <strong>{{ wordpress('get_the_date', 'l, M d, Y', post) }}</strong><br />
+        {% set tags = wordpress('wp_get_post_tags', post.ID) %}
+        {% if tags|length %}
+            <span class="blog_tags">
+                <i class="fa fa-tag{{ tags|length > 1 ? 's':'' }}" title="Tag{{ tags|length ? 's':'' }}"></i>
+                Tag{{ tags|length > 1 ? 's':'' }} |
+                {% for tag in tags %}
+                    <a href="{{ path('wp_tag', {'tag':tag.slug}) }}">{{ tag.name }}</a>{{ not loop.last ? ', ':'' }}
+                {% endfor %}
+            </span>
+        {% endif %}</p>
+        {{ wordpress('get_the_post_thumbnail', post)|raw }}
+        <div class="blogContent">
+        {{ wordpress('apply_filters', 'the_content', post.post_content)|raw }}
+        </div>
+        <hr />
+        <p><a class="btn" href="{{ path('wp_index') }}">Back to list</a></p>
+        <div class="row">
+            <div class="col-xs-6">
+                {% if previous_post %}
+                    <h4>Previous post</h4>
+                    <p>
+                        <a href="{{ path('wp_view', {'slug':previous_post.post_name}) }}">{{ previous_post.post_title }}</a>
+                    </p>
+                {% endif %}
+            </div>
+            <div class="col-xs-6 blog_next">
+                {% if next_post %}
+                    <h4>Next post</h4>
+                    <p>
+                        <a href="{{ path('wp_view', {'slug':next_post.post_name}) }}">{{ next_post.post_title }}</a>
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

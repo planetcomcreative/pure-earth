@@ -1,0 +1,29 @@
+# Select image from https://hub.docker.com/_/php/
+image: gnat42/centos7-php7
+
+# Select what we should cache
+cache:
+  paths:
+  - vendor/
+
+before_script:
+# Make sure composer can access all packagist/github repos
+- composer.phar config -g github-oauth.github.com c14e3ece4fc3e3830b3a9e097743faa191ca0700
+
+# Install all project dependencies
+- cp app/config/parameters.yml.ci_dist app/config/parameters.yml
+- composer.phar install --no-interaction -o
+- php bin/console doctrine:schema:create
+
+services:
+- mysql
+
+variables:
+  # Configure mysql service (https://hub.docker.com/_/mysql/)
+  MYSQL_DATABASE: purearth_new
+  MYSQL_ROOT_PASSWORD: root
+
+# We test PHP7 with MySQL, but we allow it to fail
+test:php72:
+  script:
+    - vendor/bin/phpunit --coverage-text

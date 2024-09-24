@@ -1,0 +1,35 @@
+NS\Purearth\Sale\AbstractSale:
+  type: entity
+  table: sale
+  repositoryClass: NS\Purearth\Sale\SaleRepository
+  inheritanceType: SINGLE_TABLE
+  discriminatorColumn:
+    name: type
+    type: string
+    length: 64
+  discriminatorMap:
+    cleansePercentSale: NS\Purearth\Sale\CleansePercentSale
+  entityListeners:
+    NS\PurearthBundle\Listeners\TimestampListener:
+      preUpdate: [preUpdate]
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    createdAt:
+      type: datetime
+    updatedAt:
+      type: datetime
+    name:
+      type: string
+    description:
+      type: string
+      nullable: true
+    startDate:
+      type: datetime
+    endDate:
+      type: datetime
+    discount:
+      type: float

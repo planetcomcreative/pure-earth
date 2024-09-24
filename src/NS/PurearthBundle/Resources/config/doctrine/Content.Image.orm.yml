@@ -1,0 +1,23 @@
+NS\Purearth\Content\Image:
+  type: entity
+  table: images
+  entityListeners:
+    NS\PurearthBundle\Listeners\TimestampListener:
+      preUpdate: [preUpdate]
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    createdAt:
+      type: datetime
+    updatedAt:
+      type: datetime
+    title:
+      type: string
+    description:
+      type: text
+    imageName:
+      type: string
+      nullable: true

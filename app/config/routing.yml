@@ -1,0 +1,19 @@
+app:
+  resource: "@NSPurearthBundle/Controller/"
+  type:     annotation
+
+nspurearthbundle:
+  resource: "@NSPurearthBundle/Resources/config/routing.yml"
+  prefix: /
+
+admin:
+    resource: '@SonataAdminBundle/Resources/config/routing/sonata_admin.xml'
+    prefix: /admin/manage
+
+_liip_imagine:
+    resource: "@LiipImagineBundle/Resources/config/routing.xml"
+
+_sonata_admin:
+    resource: .
+    type: sonata_admin
+    prefix: /admin/manage

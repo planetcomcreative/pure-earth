@@ -1,0 +1,54 @@
+NS\Purearth\Order\Order:
+  type: entity
+  table: orders
+  repositoryClass: NS\Purearth\Order\OrderRepository
+  entityListeners:
+    NS\PurearthBundle\Listeners\TimestampListener:
+      preUpdate: [preUpdate]
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  oneToOne:
+    payment:
+      targetEntity: NS\Purearth\Order\Payment
+      cascade: [persist]
+  manyToOne:
+    user:
+      targetEntity: NS\Purearth\User\User
+  oneToMany:
+    orderProducts:
+      targetEntity: NS\Purearth\Order\OrderProduct
+      mappedBy: order
+      cascade: [persist, remove]
+    courseRegistrations:
+      targetEntity: NS\Purearth\Order\CourseRegistration
+      mappedBy: order
+      cascade: [persist, remove]
+  fields:
+    createdAt:
+      type: datetime
+    updatedAt:
+      type: datetime
+    date:
+      type: datetime
+    status:
+      type: integer
+    delivery:
+      type: boolean
+    deliveryAddress:
+      type: string
+      nullable: true
+    deliveryCharge:
+      type: float
+      nullable: true
+    gstRate:
+      type: float
+      nullable: true
+    pstRate:
+      type: float
+      nullable: true
+    comments:
+      type: text
+      nullable: true

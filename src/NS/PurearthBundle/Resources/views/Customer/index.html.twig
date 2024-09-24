@@ -1,0 +1,81 @@
+{% extends 'NSPurearthBundle::layout.html.twig' %}
+{% block title %}
+    Customer Dashboard
+{% endblock %}
+{% block bodyClass %}profile{% endblock %}
+
+{% block pageScripts %}
+    {% if newRegistration %}
+    <script type="text/javascript">
+        fbq('track', 'CompleteRegistration');
+    </script>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+<h2>Welcome, {{ user.firstName }}</h2>
+<hr />
+<div class="row">
+    <div class="col-sm-10">
+        <form class="form-horizontal" method="POST">
+            <div class="form-group">
+                <label class="col-sm-3">Name</label>
+                <div class="col-sm-9">{{ user.name }}</div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3">Address</label>
+                <div class="col-sm-9">{{ user.addrStreet }}</div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3">City/Province</label>
+                <div class="col-sm-9">{{ user.addrCity }} {{ user.addrProv }}</div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3"><a href="{{ url('customer_edit') }}"><i class="fa fa-pencil"></i> Edit Profile</a></label>
+                <label class="col-sm-3"><a href="{{ url('customer_change_password') }}"><i class="fa fa-key"></i> Change Password</a></label>
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+{% block courseRegistrations %}
+    {% if user.getFutureCourseRegistrations|length %}
+        <h3>My Classes</h3>
+        <div class="row">
+            {% for reg in user.getFutureCourseRegistrations %}
+                <div class="col-xs-12 col-sm-6 col-md-4">
+                    <h4>{{ reg.course }}</h4>
+                    <strong>{{ reg.course.date.format('M d, Y') }}, {{ reg.course.startTime.format('h:i a') }} to {{ reg.course.endTime.format('h:i a') }}</strong>
+                    <p>{{ reg.registrantInfo|nl2br }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <hr />
+    {% endif %}
+{% endblock %}
+<div class="row">
+    <div class="col-sm-12">
+        <h3>Orders</h3>
+        {% if orders|length %}
+            <table class="table">
+                <tr>
+                    <th>Order #</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th></th>
+                </tr>
+                {% for order in orders %}
+                    <tr>
+                        <th>{{ order.id }}</th>
+                        <td>{{ order.date.format('d M, Y H:i a') }}</td>
+                        <td>${{ order.payment.amount|number_format(2) }} &nbsp; {{ order.hasDelivery ? '<i title="Delivery" class="fa fa-truck"></i>':'' }}</td>
+                        <td><a href="{{ path('order_details', {'orderId':order.id}) }}"><i class="fa fa-info-circle"></i> Details</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No past orders</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

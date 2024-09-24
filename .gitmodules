@@ -1,0 +1,6 @@
+[submodule "src/NS/ColorAdmin"]
+	path = src/NS/ColorAdmin
+	url = git@gitlab.noblet.ca:/woynarski/coloradmin-devel.git
+[submodule "src/NS/ColorAdminBundle"]
+	path = src/NS/ColorAdminBundle
+	url = git@gitlab.noblet.ca:/woynarski/coloradmin-devel.git

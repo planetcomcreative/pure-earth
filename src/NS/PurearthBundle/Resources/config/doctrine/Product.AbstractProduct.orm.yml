@@ -1,0 +1,50 @@
+NS\Purearth\Product\AbstractProduct:
+  type: entity
+  table: products
+  inheritanceType: SINGLE_TABLE
+  discriminatorColumn:
+    name: type
+    type: string
+    length: 64
+  discriminatorMap:
+    juice: NS\Purearth\Product\Juice
+    course: NS\Purearth\Product\Course
+    special: NS\Purearth\Product\Special
+  entityListeners:
+    NS\PurearthBundle\Listeners\TimestampListener:
+      preUpdate: [preUpdate]
+  oneToMany:
+    orderProducts:
+      targetEntity: NS\Purearth\Order\OrderProduct
+      mappedBy: product
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    createdAt:
+      type: datetime
+    updatedAt:
+      type: datetime
+    name:
+      type: string
+      nullable: true
+    price:
+      type: float
+      nullable: true
+    description:
+      type: text
+      nullable: true
+    summary:
+      type: text
+      nullable: true
+    gst:
+      type: boolean
+      nullable: true
+    pst:
+      type: boolean
+      nullable: true
+    imageName:
+      type: string
+      nullable: true

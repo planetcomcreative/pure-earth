@@ -1,0 +1,23 @@
+NS\Purearth\Product\Course:
+  properties:
+    name:
+      - NotBlank: ~
+    description:
+      - NotBlank: ~
+    date:
+      - NotBlank: ~
+    startTime:
+      - NotBlank: ~
+    endTime:
+      - NotBlank: ~
+    registrationCutoff:
+      - NotBlank: ~
+
+NS\Purearth\Product\Juice:
+  properties:
+    name:
+      - NotBlank: ~
+    price:
+      - NotBlank: ~
+    summary:
+      - NotBlank: ~

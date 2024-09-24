@@ -1,0 +1,247 @@
+imports:
+- { resource: parameters.yml }
+- { resource: security.yml }
+- { resource: services.yml }
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: en
+
+framework:
+    #esi:             ~
+    translator:      { fallbacks: [en] }
+    secret:          "%secret%"
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    #serializer:      { enable_annotations: true }
+    templating:
+        engines: ['twig']
+    default_locale:  "%locale%"
+    trusted_hosts:   ~
+    trusted_proxies: ~
+    session:
+        # http://symfony.com/doc/current/reference/configuration/framework.html#handler-id
+        handler_id:  session.handler.native_file
+        save_path:   /tmp/pe/sessions #"%kernel.root_dir%/../var/sessions/%kernel.environment%"
+    fragments:       ~
+    http_method_override: true
+    assets: ~
+
+# Twig Configuration
+twig:
+    debug:            true
+    strict_variables: "%kernel.debug%"
+    globals:
+        sitename:       "%sitename%"
+    form_themes: # NSColorAdminBundle:Form:fields.html.twig is appended to this list via a compiler pass in that bundle and the Purearth bundle
+    - 'VichUploaderBundle:Form:fields.html.twig'
+    - 'SonataCoreBundle:Form:datepicker.html.twig'
+    - 'NSColorAdminBundle:Form:vich.html.twig'
+    - 'NSPurearthBundle:Form:fields.html.twig'
+#      - 'SonataAdminBundle:Form:filter_admin_fields.html.twig'
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        server_version: 5.5
+        driver:   pdo_mysql
+        host:     "%database_host%"
+        port:     "%database_port%"
+        dbname:   "%database_name%"
+        user:     "%database_user%"
+        password: "%database_password%"
+        charset:  UTF8
+        # if using pdo_sqlite as your database driver:
+        #   1. add the path in parameters.yml
+        #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
+        #   2. Uncomment database_path in parameters.yml.dist
+        #   3. Uncomment next line:
+        #     path:     "%database_path%"
+
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        mappings:
+            NSPurearthBundle:
+                type: yml
+                prefix: NS\Purearth
+
+
+# Swiftmailer Configuration
+swiftmailer:
+    host: "%smtp_host%"
+    port: "%smtp_port%"
+    username: "%smtp_username%"
+    password: "%smtp_password%"
+    encryption: "%smtp_encryption%"
+    #    auth_mode: "%smtp_auth_mode%"
+    spool:     { type: memory }
+
+ivory_ck_editor:
+    default_config: standard
+    plugins:
+        horizontalrule:
+            path: "/ckeditor/plugins/horizontalrule"
+            filename: "plugin.js"
+    configs:
+        standard:
+            toolbar: [[ 'Maximize' ],"-",['Bold','Italic','Underline','Strike', '-', 'Subscript','Superscript' ],"-",[ 'NumberedList','BulletedList' ],"-",[ 'Outdent','Indent','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],"-",[ 'Link','Unlink', 'Anchor' ],"-",['Image'], "-", [ 'Table', 'SpecialChar', 'HorizontalRule' ],"-",[ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ],"-",[ 'Find','Replace','-','SelectAll', 'RemoveFormat' ], "-", ['Source'],"/",[ 'Styles', 'Format' ]]
+            extraAllowedContent: 'iframe[*]; hr'
+            extraPlugins: 'horizontalrule'
+            stylesSet: [{name: 'Button', element: 'a', attributes: {'class':'btn'}}, {name: 'Cart Icon', element: 'span', attributes: {'class':'fa fa-cart-plus'}}]
+            contentsCss: ['/bundles/nspurearth/css/editor.css', '//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css']
+
+sonata_block:
+    default_contexts: [cms]
+    blocks:
+        # enable the SonataAdminBundle block
+        sonata.admin.block.admin_list:
+            contexts:   [admin]
+
+sonata_admin:
+    options:
+        form_type: horizontal
+    templates:
+        batch_confirmation: :CRUD:batch_confirmation.html.twig
+#    layout: NSColorAdminSonataBundle::standard_layout.html.twig
+#    list: NSColorAdminSonataBundle:CRUD:list.html.twig
+#    pager_links: NSColorAdminSonataBundle::pager.html.twig
+#    edit: NSColorAdminSonataBundle:CRUD:edit.html.twig
+#  templates:
+#    layout: NSColorAdminSonataBundle::standard_layout.html.twig
+#    list: NSColorAdminSonataBundle:CRUD:list.html.twig
+
+ewz_recaptcha:
+    public_key: 6LcAXFgUAAAAAGmPEGldTnpM_JI8u1jfc2xfkppE
+    private_key: 6LcAXFgUAAAAACcdESjnBd9be3VqkxxQPRKDQ3I6
+
+vich_uploader:
+    db_driver: orm
+    mappings:
+        product_image:
+            uri_prefix:         /uploads/images/products
+            upload_destination: '%kernel.root_dir%/../web/uploads/images/products'
+            inject_on_load: true
+            delete_on_remove:   true
+            namer: vich_uploader.namer_uniqid
+        global_image:
+            uri_prefix:         /uploads/images/global
+            upload_destination: '%kernel.root_dir%/../web/uploads/images/global'
+            inject_on_load: true
+            delete_on_remove:   true
+            namer: vich_uploader.namer_uniqid
+
+#stof_doctrine_extensions:
+#    orm:
+#        default:
+#            sortable: true
+
+liip_imagine:
+    loaders:
+        default:
+            filesystem:
+                bundle_resources:
+                    enabled: true
+                data_root: %image_data_root%
+    filter_sets:
+        product_list_thumbnail:
+            quality: 75
+            filters:
+                thumbnail: { size: [180,180], mode: outbound}
+        special_list_thumbnail:
+            quality: 75
+            filters:
+                thumbnail: { size: [320,240], mode: inset}
+        juice_list_thumbnail:
+            quality: 75
+            filters:
+                thumbnail: { size: [275,206], mode: outbound}
+        admin_thumbnail:
+            quality: 75
+            filters:
+                thumbnail: { size: [150,150], mode: inset}
+        product_show_thumbnail:
+            quality: 75
+            filters:
+                thumbnail: { size: [400,300], mode: inset}
+        juice_highlight_thumbnail:
+            quality: 75
+            filters:
+                thumbnail: { size: [120,200], mode: outbound}
+        class_thumbnail:
+            quality: 75
+            filters:
+                thumbnail: { size: [400,300], mode: inset}
+
+        fullscreen_lg:
+            quality: 75
+            filters:
+                thumbnail: { size: [1200,1200], mode: inset }
+
+        fullscreen_md:
+            quality: 75
+            filters:
+                thumbnail: { size: [992, 992], mode: inset }
+
+        fullscreen_sm:
+            quality: 75
+            filters:
+                thumbnail: { size: [768,768], mode: inset }
+
+        fullscreen_xs:
+            quality: 75
+            filters:
+                thumbnail: { size: [480,480], mode: inset }
+
+        fullscreen_mobile:
+            quality: 75
+            filters:
+                thumbnail: { size: [320,320], mode: inset }
+
+        juice_bottle:
+            quality: 75
+            filters:
+                thumbnail: { size: [120,400], mode: inset }
+
+        sale:
+            quality: 75
+            filters:
+                thumbnail: { size: [350, 350], mode: inset }
+
+        homepage_xl:
+            quality: 75
+            filters:
+                thumbnail: { size: [1920,620], mode: outbound }
+
+        homepage_lg:
+            quality: 75
+            filters:
+                thumbnail: { size: [1200,388], mode: outbound }
+
+        homepage_md:
+            quality: 75
+            filters:
+                thumbnail: { size: [992,320], mode: outbound }
+
+        homepage_sm:
+            quality: 75
+            filters:
+                thumbnail: { size: [768,400], mode: outbound }
+
+        homepage_xs:
+            quality: 75
+            filters:
+                thumbnail: { size: [480,250], mode: outbound }
+
+        homepage_mobile:
+            quality: 75
+            filters:
+                thumbnail: { size: [320,167], mode: outbound }
+
+ns_wordpress:
+    wordpress_path: "%kernel.root_dir%/../web/peblog/"

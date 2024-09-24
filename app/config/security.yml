@@ -1,0 +1,42 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/book/security.html
+security:
+  role_hierarchy:
+    ROLE_SUPER_ADMIN: [ ROLE_SUPER_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
+
+  encoders:
+    NS\Infrastructure\Security\SecurityUser:
+      algorithm: bcrypt
+    NS\Purearth\User\User:
+      algorithm: bcrypt
+
+#  # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+  providers:
+    users:
+      id: ns_purearth.security_user_provider
+
+  firewalls:
+    # disables authentication for assets and the profiler, adapt it according to your needs
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+
+    main:
+      pattern: ^/
+      anonymous: ~
+      access_denied_handler: ns_purearth.access_denied_handler
+      form_login:
+        login_path: /login
+        check_path: /login_check
+      logout:
+        path:   /logout
+        target: /
+
+  access_control:
+    - { path: ^/order, roles: ROLE_CONFIRMED_USER }
+    - { path: ^/customer/reset_password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/customer, roles: ROLE_CONFIRMED_USER }
+#    - { path: ^/cart, roles: ROLE_CUSTOMER }
+    - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+    - { path: ^/admin, roles: ROLE_SUPER_ADMIN }
+    - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }

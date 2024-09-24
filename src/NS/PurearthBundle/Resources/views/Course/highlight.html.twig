@@ -1,0 +1,16 @@
+{% if courses|length %}
+    <ul class="classList">
+    {% for course in courses %}
+        <li>
+            <a href="{{ path('course_view', {'id':course.id}) }}">
+                <span class="linkTitle">{{ course }}</span>
+                <span class="linkDate">{{ course.date.format('D, M d, Y') }}</span>
+                <span class="linkDesc">{{ course.summary|raw }}</span>
+                <i class="fa fa-chevron-circle-right"></i>
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Sorry, we don't have any classes currently available.</p>
+{% endif %}

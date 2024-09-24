@@ -1,0 +1,23 @@
+NS\Purearth\Config\Config:
+  type: entity
+  table: config
+  entityListeners:
+    NS\PurearthBundle\Listeners\TimestampListener:
+      preUpdate: [preUpdate]
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    createdAt:
+      type: datetime
+    updatedAt:
+      type: datetime
+    name:
+      type: string
+    value:
+      type: string
+      nullable: true
+    slug:
+      type: string

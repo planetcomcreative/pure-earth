@@ -1,0 +1,14 @@
+test
+{{ form_row(cform.tester) }}
+{% for courseForm in cform.courses %}
+    {{ courseForm.vars.value }}<br/><hr/>
+    {{ form_row(courseForm.test) }}
+    {% for regis in courseForm.courseRegistrations %}
+        {{ courseForm.vars.value }} Registrant {{ loop.index }}<br/><hr/>
+        {{ form_row(regis.name) }}
+        {{ form_row(regis.address) }}
+        {{ form_row(regis.phone) }}
+        {{ form_row(regis.postalCode) }}
+        {% endfor %}
+    {% endfor %}
+{{ form_rest(cform) }}

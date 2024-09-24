@@ -1,0 +1,20 @@
+NS\Purearth\Order\OrderProduct:
+  type: entity
+  table: order_product
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  manyToOne:
+    order:
+      targetEntity: NS\Purearth\Order\Order
+      inversedBy: orderProducts
+    product:
+      targetEntity: NS\Purearth\Product\AbstractProduct
+      inversedBy: orderProducts
+  fields:
+    quantity:
+      type: integer
+    price:
+      type: float

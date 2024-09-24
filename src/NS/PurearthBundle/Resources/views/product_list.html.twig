@@ -1,0 +1,63 @@
+{% extends 'NSPurearthBundle::layout.html.twig' %}
+
+{% block title %}
+    Products
+{% endblock %}
+
+{% block body %}
+    {% block listTitle %}
+        <h3>Available Products</h3>
+    {% endblock %}
+    {% block intro %}
+    {% endblock intro %}
+    {% if(items is empty) %}
+        {% block noProductsMessage %}
+            <div class="listMessage warning col-xs-8">
+                {% block noProductsMessageText %}
+                    Sorry, there are no products currently available.
+                {% endblock %}
+            </div>
+        {% endblock %}
+    {% else %}
+        {% block productList %}
+            <div class="productList">
+                {% for item in items %}
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 item">
+                        {% set img = vich_uploader_asset(item, 'imageFile') %}
+                        <div class="itemImage">
+                            {% if img %}
+                            <img src="{{ img|imagine_filter('product_list_thumbnail') }}" alt="" />
+                            {% endif %}
+                        </div>
+                        <strong class="itemName">
+                            {{ item.name }}
+                        </strong>
+                        {% if item.price is defined %}
+                            {% if item.salePrice is defined %}
+                                <span class="oldPrice">
+                                    ${{ item.price }}
+                                </span>&nbsp;
+                                <span class="salePrice">
+                                    ${{ item.salePrice }}
+                                </span>
+                            {% else %}
+                                <span class="price">
+                                    ${{ item.price }}
+                                </span>
+                            {% endif %}
+                            {% if item.unit is defined %}
+                                <em class="itemUnit">
+                                    {{ item.unit }}
+                                </em>
+                            {% endif %}
+                        {% endif %}
+                        {% block item_extra %}{% endblock %}
+                        {% block itemSummary %}
+                            <p class="itemSummary">{{ item.description }}</p>
+                        {% endblock %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endblock %}
+    {% endif %}
+{% endblock %}

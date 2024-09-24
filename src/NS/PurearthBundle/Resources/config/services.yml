@@ -1,0 +1,321 @@
+parameters:
+  ns_purearth.cache_cart_namespace: 'nspurearth_cart_'
+  ns_purearth.cache_cart_lifetime: 86400
+  ns_purearth.cart_session_key: 'ns_purearth.cart'
+  ns_purearth.order_session_key: 'ns_purearth.order'
+
+services:
+    cache:
+      class: Doctrine\Common\Cache\PhpFileCache
+      arguments: ["%kernel.cache_dir%"]
+
+    ns.purearthbundle.data_fixtures.user_processor:
+      class: NS\PurearthBundle\DataFixtures\Processor\PasswordEncoderProcessor
+      arguments: [ "@security.encoder_factory" ]
+      tags:
+        - { name: hautelook_alice.alice.processor }
+
+    ns.purearthbundle.handler.user.update_password:
+      class: NS\Purearth\User\Handler\UpdateUserPasswordHandler
+      arguments: [ "@event_dispatcher" ]
+      calls:
+        - [ setEntityManager, [ "@doctrine.orm.entity_manager" ]]
+        - [ setEncoderFactory, [ "@security.encoder_factory" ]]
+      tags:
+        - { name: command_handler, handles: NS\Purearth\User\Command\UpdateUserPasswordCommand }
+
+    ns.purearthbundle.handler.user.update:
+      class: NS\Purearth\User\Handler\UpdateUserHandler
+      arguments: [ "@event_dispatcher" ]
+      calls:
+        - [ setEntityManager, [ "@doctrine.orm.entity_manager" ]]
+      tags:
+        - { name: command_handler, handles: NS\Purearth\User\Command\UpdateUserCommand }
+
+    ns.purearthbundle.handler.user.register:
+      class: NS\Purearth\User\Handler\RegistrationHandler
+      arguments: [ "@event_dispatcher" ]
+      calls:
+        - [ setEntityManager, [ "@doctrine.orm.entity_manager" ]]
+        - [ setEncoderFactory, [ "@security.encoder_factory" ]]
+      tags:
+        - { name: command_handler, handles: NS\Purearth\User\Command\RegisterUserCommand }
+
+    ns.purearthbundle.handler.user.confirm:
+      class: NS\Purearth\User\Handler\ConfirmUserHandler
+      arguments: [ "@event_dispatcher" ]
+      calls:
+        - [ setEntityManager, [ "@doctrine.orm.entity_manager" ]]
+      tags:
+        - { name: command_handler, handles: NS\Purearth\User\Command\ConfirmUserCommand}
+
+    ns.purearthbundle.handler.user.purge:
+          class: NS\Purearth\User\Handler\PurgeUsersHandler
+          arguments: [ "@event_dispatcher" ]
+          calls:
+            - [ setEntityManager, [ "@doctrine.orm.entity_manager" ]]
+          tags:
+            - { name: command_handler, handles: NS\Purearth\User\Command\PurgeUsersCommand}
+
+    ns.purearthbundle.handler.order.create_order_from_cart:
+      class: NS\Purearth\Order\Handler\CreateOrderFromCartHandler
+      arguments: [ "@event_dispatcher" ]
+      calls:
+        - [ setEntityManager, [ "@doctrine.orm.entity_manager" ]]
+        - [ setSaleService, [ "@ns_purearth.sale" ]]
+        - [ setProductReferenceFactory, [ "@ns_purearth.product_reference_factory" ]]
+        - [ setOrderService, [ "@ns.purearth.order" ]]
+      tags:
+        - { name: command_handler, handles: NS\Purearth\Order\Command\CreateOrderFromCartCommand }
+
+    ns.purearthbundle.handler.order.delete_order:
+      class: NS\Purearth\Order\Handler\DeleteOrderHandler
+      arguments: [ "@event_dispatcher" ]
+      calls:
+        - [ setEntityManager, [ "@doctrine.orm.entity_manager" ]]
+      tags:
+        - { name: command_handler, handles: NS\Purearth\Order\Command\DeleteOrderCommand}
+
+    ns.purearthbundle.handler.order.place_order:
+      class: NS\Purearth\Order\Handler\PlaceOrderHandler
+      arguments: [ "@event_dispatcher" ]
+      calls:
+        - [ setEntityManager, [ "@doctrine.orm.entity_manager" ]]
+        - [ setPaymentProcessor, [ "@ns_purearth.stripe_payment_processor" ]]
+        - [ setTaxes, [ "%gst_rate%", "%pst_rate%" ]]
+        - [ setShipping, ["%shipping_rate%"]]
+      tags:
+        - { name: command_handler, handles: NS\Purearth\Order\Command\PlaceOrderCommand}
+
+    ns.purearthbundle.handler.course.register:
+      class: NS\Purearth\Order\Handler\CourseRegistrationHandler
+      arguments: [ "@event_dispatcher" ]
+      calls:
+        - [ setEntityManager, [ "@doctrine.orm.entity_manager" ]]
+      tags:
+        - { name: command_handler, handles: NS\Purearth\Order\Command\CourseRegistrationCommand}
+
+    ns.purearthbundle.handler.user.generate_reset_token:
+      class: NS\Purearth\User\Handler\GenerateUserResetTokenHandler
+      arguments: [ "@event_dispatcher" ]
+      calls:
+        - [ setEntityManager, [ "@doctrine.orm.entity_manager" ]]
+      tags:
+        - { name: command_handler, handles: NS\Purearth\User\Command\GenerateUserResetTokenCommand }
+
+    ns.purearth.special:
+      class: NS\Purearth\Product\Service\SpecialService
+      arguments: [ "@doctrine.orm.entity_manager" ]
+
+    ns.purearth.course:
+      class: NS\Purearth\Product\Service\CourseService
+      arguments: [ "@doctrine.orm.entity_manager" ]
+
+    ns.purearth.juice:
+      class: NS\Purearth\Product\Service\JuiceService
+      arguments: [ "@doctrine.orm.entity_manager" ]
+
+    ns.purearth.product:
+      class: NS\Purearth\Product\Service\ProductService
+      arguments: [ "@doctrine.orm.entity_manager" ]
+
+    ns.purearth.order:
+      class: NS\Purearth\Order\Service\OrderService
+      arguments: [ "@security.token_storage", "@doctrine.orm.entity_manager" ]
+
+    ns.purearth.user:
+      class: NS\Purearth\User\Service\UserService
+      arguments: [ "@security.token_storage", "@doctrine.orm.entity_manager" ]
+
+    ns.purearth.signup:
+      class: NS\Purearth\Stats\Service\SignupService
+      arguments: [ "@doctrine.orm.entity_manager" ]
+
+    ns.purearth.content:
+      class: NS\Purearth\Content\Service\ContentService
+      arguments: [ "@doctrine.orm.entity_manager" ]
+
+    ns.purearth.config:
+      class: NS\Purearth\Config\Service\ConfigService
+      arguments: [ "@doctrine.orm.entity_manager" ]
+
+    ns.purearth.mailchimp:
+        class: NS\PurearthBundle\Service\MailchimpAPI
+        arguments: [ "%mailchimp_api_key%", "%mailchimp_primary_list_id%" ]
+
+    ns.purearthbundle.listeners.login_request:
+        class: NS\PurearthBundle\Listeners\LoginRequestListener
+        arguments: [ "@security.authorization_checker", "@router", "@event_dispatcher", "@security.helper", "@ns_flash" ]
+        tags:
+          - { name: kernel.event_listener, event: security.interactive_login, method: onSecurityInteractiveLogin }
+
+    ns.purearthbundle.listeners.user:
+        class: NS\PurearthBundle\Listeners\UserListener
+        arguments: [ "@security.token_storage", "@request_stack", "@event_dispatcher", "@ns.purearth.mailchimp", "@logger", "@ns.purearth.user"]
+        tags:
+          - { name: kernel.event_listener, event: user.registered, method: onUserRegistered }
+          - { name: kernel.event_listener, event: user.updated, method: onUserUpdated }
+          - { name: kernel.event_listener, event: user.resubscribe, method: onUserResubscribe }
+        calls:
+            - [ setEmail, ["@ns_purearth.mail"]]
+
+    ns.purearthbundle.listeners.order:
+        class: NS\PurearthBundle\Listeners\OrderListener
+        arguments: [ "@security.token_storage", "@request_stack", "@event_dispatcher"]
+        tags:
+          - { name: kernel.event_listener, event: order.paid, method: onOrderPaid }
+        calls:
+            - [ setEmail, ["@ns_purearth.mail"]]
+
+    ns_color_admin.menu.sidebar:
+        class: NS\PurearthBundle\Menu\MenuBuilder
+        arguments: ["@knp_menu.factory"]
+        tags:
+            - { name: knp_menu.menu_builder, method: createSidebarMenu, alias: sidebar } # The alias is what is used to retrieve the menu
+            - { name: knp_menu.menu_builder, method: createSidebarMenu, alias: breadcrumbs }
+            - { name: knp_menu.menu_builder, method: createWebsiteMenu, alias: website_sidebar }
+            - { name: knp_menu.menu_builder, method: createFrontendMenu, alias: frontend_main_menu }
+            - { name: knp_menu.menu_builder, method: createFrontendTopMenu, alias: frontend_top_menu }
+
+    ns_purearth.admin.special:
+        class: NS\PurearthBundle\Admin\SpecialAdmin
+        arguments: [~, NS\Purearth\Product\Special, NSPurearthBundle:SpecialAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Special }
+
+    ns_purearth.admin.customer:
+        class: NS\PurearthBundle\Admin\CustomerAdmin
+        arguments: [~, NS\Purearth\User\User, NSPurearthBundle:CustomerAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: User }
+
+    ns_purearth.admin.administrator:
+        class: NS\PurearthBundle\Admin\AdministratorAdmin
+        arguments: [~, NS\Purearth\User\User, NSPurearthBundle:AdministratorAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: User }
+
+#    ns_purearth.admin.juice:
+#        class: NS\PurearthBundle\Admin\JuiceAdmin
+#        arguments: [~, NS\Purearth\Product\Juice, 'PixSortableBehaviorBundle:SortableAdmin']
+#        tags:
+#            - { name: sonata.admin, manager_type: orm, group: admin, label: Juice }
+#        calls:
+#            - [ setPositionService, ["@pix_sortable_behavior.position"]]
+
+    ns_purearth.admin.juice:
+        class: NS\PurearthBundle\Admin\JuiceAdmin
+        arguments: [~, NS\Purearth\Product\Juice, NSPurearthBundle:JuiceAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Juice }
+
+    ns_purearth.admin.course:
+        class: NS\PurearthBundle\Admin\CourseAdmin
+        arguments: [~, NS\Purearth\Product\Course, NSPurearthBundle:CourseAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Course }
+
+    ns_purearth.admin.content:
+        class: NS\PurearthBundle\Admin\ContentAdmin
+        arguments: [~, NS\Purearth\Content\Content, NSPurearthBundle:ContentAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Content }
+
+    ns_purearth.file_cache:
+        class: NS\PurearthBundle\Service\FileCacheStorage
+        arguments: ["@cache"]
+        calls:
+          - [ initialize, ["%ns_purearth.cache_cart_namespace%","%ns_purearth.cache_cart_lifetime%"]]
+
+    ns_purearth.cart_manager:
+        class: NS\PurearthBundle\Service\CartManager
+        arguments: ["@session", "%ns_purearth.cart_session_key%", "@security.token_storage", "@ns_purearth.file_cache"]
+
+    ns_purearth.cart_detail:
+        class: NS\PurearthBundle\Service\CartDetail
+        arguments: ["@ns.purearth.product", "@ns_purearth.cart_manager", "@ns_purearth.sale", "%gst_rate%", "%pst_rate%"]
+
+    ns_purearth.product_reference_factory:
+        class: NS\Purearth\Product\ProductReferenceFactory
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    ns_purearth.stripe_payment_processor:
+        class: NS\PurearthBundle\Service\StripePaymentProcessor
+        arguments: ["@request_stack", "@ns.stripe"]
+
+    ns_purearth.admin.order:
+        class: NS\PurearthBundle\Admin\OrderAdmin
+        arguments: [~, NS\Purearth\Order\Order, NSPurearthBundle:OrderAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Order }
+
+    ns_purearth.admin.cleanse_order:
+        class: NS\PurearthBundle\Admin\CleanseOrderAdmin
+        arguments: [~, NS\Purearth\Order\Order, NSPurearthBundle:CleanseOrderAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: CleanseOrder }
+
+#    gedmo.listener.sortable:
+#        class: Gedmo\Sortable\SortableListener
+#        tags:
+#            - { name: doctrine.event_subscriber, connection: default }
+#        calls:
+#            - [ setAnnotationReader, [ "@annotation_reader" ] ]
+
+    ns_purearth.admin.course_registration:
+        class: NS\PurearthBundle\Admin\CourseRegistrationAdmin
+        arguments: [~, NS\Purearth\Order\CourseRegistration, NSPurearthBundle:CourseRegistrationAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: CourseRegistration }
+
+    ns_purearth.admin.image:
+        class: NS\PurearthBundle\Admin\ImageAdmin
+        arguments: [~, NS\Purearth\Content\Image, NSPurearthBundle:ImageAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Image }
+
+    ns_purearth.security_user_provider:
+        class: NS\Infrastructure\Security\SecurityUserProvider
+        arguments: [ "@=service('doctrine.orm.entity_manager').getRepository('NSPurearthBundle:User\\\\User')", "@ns.purearth.mailchimp" ]
+
+    ns_purearth.mail:
+        class: NS\PurearthBundle\Service\Email
+        arguments: ['@twig', '@mailer', '%email_sender%', '%order_email_receiver%', "%shipping_rate%"]
+
+    ns_purearth.access_denied_handler:
+      class: NS\PurearthBundle\Listeners\UserUnconfirmedListener
+      arguments: [ "@security.authorization_checker", "@router"]
+
+    ns_purearth.admin.product_category:
+        class: NS\PurearthBundle\Admin\ProductCategoryAdmin
+        arguments: [~, NS\Purearth\Product\ProductCategory, NSPurearthBundle:ProductCategoryAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: ProductCategory }
+
+    ns_purearth.admin.config:
+        class: NS\PurearthBundle\Admin\ConfigAdmin
+        arguments: [~, NS\Purearth\Config\Config, NSPurearthBundle:ConfigAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Config }
+
+    ns_purearth.admin.sale:
+        class: NS\PurearthBundle\Admin\CleansePercentSaleAdmin
+        arguments: [~, NS\Purearth\Sale\CleansePercentSale, NSPurearthBundle:CleansePercentSaleAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Sale }
+
+    ns_purearth.sale:
+        class: NS\PurearthBundle\Service\SaleService
+        arguments: [ "@doctrine.orm.entity_manager"]
+
+    ns_purearth.twig.sale_extension:
+        class: NS\PurearthBundle\Twig\SaleExtension
+        arguments: ["@ns_purearth.sale"]
+        tags:
+            - { name: twig.extension }
+
+    ns_purearth.validator.unique_user:
+        class: NS\PurearthBundle\Validator\UniqueUserValidator
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: validator.constraint_validator }

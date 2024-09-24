@@ -1,0 +1,93 @@
+@font-face {
+    font-family: 'Aller';
+    src: url('/bundles/nspurearth/fonts/aller_rg-webfont.eot');
+    src: url('/bundles/nspurearth/fonts/aller_rg-webfont.eot?#iefix') format('embedded-opentype'),
+    url('/bundles/nspurearth/fonts/aller_rg-webfont.woff2') format('woff2'),
+    url('/bundles/nspurearth/fonts/aller_rg-webfont.woff') format('woff'),
+    url('/bundles/nspurearth/fonts/aller_rg-webfont.ttf') format('truetype'),
+    url('/bundles/nspurearth/fonts/aller_rg-webfont.svg#aller_lightregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aller';
+    src: url('/bundles/nspurearth/fonts/aller_it-webfont.eot');
+    src: url('/bundles/nspurearth/fonts/aller_it-webfont.eot?#iefix') format('embedded-opentype'),
+    url('/bundles/nspurearth/fonts/aller_it-webfont.woff2') format('woff2'),
+    url('/bundles/nspurearth/fonts/aller_it-webfont.woff') format('woff'),
+    url('/bundles/nspurearth/fonts/aller_it-webfont.ttf') format('truetype'),
+    url('/bundles/nspurearth/fonts/aller_it-webfont.svg#aller_lightitalic') format('svg');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Aller';
+    src: url('/bundles/nspurearth/fonts/aller_bd-webfont.eot');
+    src: url('/bundles/nspurearth/fonts/aller_bd-webfont.eot?#iefix') format('embedded-opentype'),
+    url('/bundles/nspurearth/fonts/aller_bd-webfont.woff2') format('woff2'),
+    url('/bundles/nspurearth/fonts/aller_bd-webfont.woff') format('woff'),
+    url('/bundles/nspurearth/fonts/aller_bd-webfont.ttf') format('truetype'),
+    url('/bundles/nspurearth/fonts/aller_bd-webfont.svg#allerbold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aller';
+    src: url('/bundles/nspurearth/fonts/aller_bdit-webfont.eot');
+    src: url('/bundles/nspurearth/fonts/aller_bdit-webfont.eot?#iefix') format('embedded-opentype'),
+    url('/bundles/nspurearth/fonts/aller_bdit-webfont.woff2') format('woff2'),
+    url('/bundles/nspurearth/fonts/aller_bdit-webfont.woff') format('woff'),
+    url('/bundles/nspurearth/fonts/aller_bdit-webfont.ttf') format('truetype'),
+    url('/bundles/nspurearth/fonts/aller_bdit-webfont.svg#allerbold_italic') format('svg');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/bundles/nspurearth/fonts/OpenSans-Regular-webfont.eot');
+    src: url('/bundles/nspurearth/fonts/OpenSans-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+    url('/bundles/nspurearth/fonts/OpenSans-Regular-webfont.woff') format('woff'),
+    url('/bundles/nspurearth/fonts/OpenSans-Regular-webfont.ttf') format('truetype'),
+    url('/bundles/nspurearth/fonts/OpenSans-Regular-webfont.svg#open_sansregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/bundles/nspurearth/fonts/OpenSans-Italic-webfont.eot');
+    src: url('/bundles/nspurearth/fonts/OpenSans-Italic-webfont.eot?#iefix') format('embedded-opentype'),
+    url('/bundles/nspurearth/fonts/OpenSans-Italic-webfont.woff') format('woff'),
+    url('/bundles/nspurearth/fonts/OpenSans-Italic-webfont.ttf') format('truetype'),
+    url('/bundles/nspurearth/fonts/OpenSans-Italic-webfont.svg#open_sansitalic') format('svg');
+    font-weight: normal;
+    font-style: italic;
+
+}
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/bundles/nspurearth/fonts/OpenSans-Bold-webfont.eot');
+    src: url('/bundles/nspurearth/fonts/OpenSans-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+    url('/bundles/nspurearth/fonts/OpenSans-Bold-webfont.woff') format('woff'),
+    url('/bundles/nspurearth/fonts/OpenSans-Bold-webfont.ttf') format('truetype'),
+    url('/bundles/nspurearth/fonts/OpenSans-Bold-webfont.svg#open_sansbold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/bundles/nspurearth/fonts/OpenSans-BoldItalic-webfont.eot');
+    src: url('/bundles/nspurearth/fonts/OpenSans-BoldItalic-webfont.eot?#iefix') format('embedded-opentype'),
+    url('/bundles/nspurearth/fonts/OpenSans-BoldItalic-webfont.woff') format('woff'),
+    url('/bundles/nspurearth/fonts/OpenSans-BoldItalic-webfont.ttf') format('truetype'),
+    url('/bundles/nspurearth/fonts/OpenSans-BoldItalic-webfont.svg#open_sansbold_italic') format('svg');
+    font-weight: bold;
+    font-style: italic;
+
+}

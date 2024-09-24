@@ -1,0 +1,175 @@
+{% extends 'NSPurearthBundle::layout.html.twig' %}
+
+{% block contentTitle %}
+{% endblock %}
+
+{% block bodyClass %}
+    homepage
+{% endblock %}
+
+{% block main %}
+    {% block body %}
+        <section class="homepageImage clearfix">
+            <div class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner" role="listbox">
+                    <div class="item active">
+                        {% set base = imgs[0] %}
+                        {% set xl = base|imagine_filter('homepage_xl') %}
+                        {% set lg = base|imagine_filter('homepage_lg') %}
+                        {% set md = base|imagine_filter('homepage_md') %}
+                        {% set sm = base|imagine_filter('homepage_sm') %}
+                        {% set xs = base|imagine_filter('homepage_xs') %}
+                        {% set mobile = base|imagine_filter('homepage_mobile') %}
+                        {# Why are we doing this?  Because srcset won't reload the image after a change in screen size, so if we want different sizes to have different ratios,
+                        we have to use the <picture> element which isn't supported in IE, or else use two different imgs and have the styelsheet swap them out #}
+                        <img class="img-lg" src="{{ xl }}" srcset="{{ xl }} 1920w, {{ lg }} 1200w, {{ md }} 992w"
+                             alt=""/>
+                        <img class="img-sm" src="{{ sm }}" srcset="{{ sm }} 768w, {{ xs }} 480w, {{ mobile }} 320w"
+                             alt=""/>
+                    </div>
+                    {% for i in 1..3 %}
+                        <div class="item">
+                            {% set base = imgs[i] %}
+                            {% set xl = base|imagine_filter('homepage_xl') %}
+                            {% set lg = base|imagine_filter('homepage_lg') %}
+                            {% set md = base|imagine_filter('homepage_md') %}
+                            {% set sm = base|imagine_filter('homepage_sm') %}
+                            {% set xs = base|imagine_filter('homepage_xs') %}
+                            {% set mobile = base|imagine_filter('homepage_mobile') %}
+                            <img class="img-lg" src="{{ xl }}" srcset="{{ xl }} 1920w, {{ lg }} 1200w, {{ md }} 992w"
+                                 alt=""/>
+                            <img class="img-sm" src="{{ sm }}" srcset="{{ sm }} 768w, {{ xs }} 480w, {{ mobile }} 320w"
+                                 alt=""/>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {#<div class="homepageMessage col-xs-12 col-md-6">#}
+                {#<h2>The Source</h2>#}
+                {#<p>“In all things of nature there is something of the marvelous.”</p>#}
+                {#<p>— Aristotle</p>#}
+            {#</div>#}
+            {% block homeLogin %}
+                <div class="homeLogin">
+                    {% if is_granted('ROLE_CUSTOMER') %}
+                        Welcome, {{ app.user.firstName }}&nbsp;
+                        <a href="{{ url('customer_dashboard') }}" class="btn">My Account</a>
+                        {% if cart.getCount() %}
+                            <a href="{{ url('cart_view') }}" class="btn"><i
+                                        class="fa fa-shopping-cart"></i> {{ cart.getCount() }}</a>
+                        {% endif %}
+                        <a href="{{ url('logout') }}" class="btn btn-purple">Log out</a>
+                    {% else %}
+                        <form method="POST" action="{{ url('login_check') }}">
+                            <label>My Purearth</label> <input type="email" placeholder="Email address"
+                                                              name="_username"/> <input type="Password"
+                                                                                        placeholder="Password"
+                                                                                        name="_password"/>
+                            <button type="submit" class="btn">Login</button>
+                            <a href="{{ path('register') }}" class="btn btn-purple">Register</a>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endblock %}
+        </section>
+        <section class="feature clearfix juice">
+            <div class="featureText col-xs-12 col-md-6">
+                <h2>Cold-pressed Juices &amp; Cleanses</h2>
+                <p>100% organic and cold-pressed twice a week in-store.</p>
+                <p>Come pick up your juice from our always fresh selection!</p>
+                <p>Our juice cleanse packages include 6 juices per day, you can pre-order for 1 to 10 days</p>
+                <a class="featureLink" href="{{ path('juice_list') }}">Order your juice cleanse <i
+                            class="fa fa-chevron-circle-right"></i></a>
+            </div>
+            <div class="featureLinks col-xs-12 col-md-6">
+                <div class="featureLinksScroll juice">
+                    {% for i in 1..11 %}
+                        <div>
+                            <img src="{{ ('/bundles/nspurearth/images/juice/juice_'~i~'.jpg')|imagine_filter('juice_bottle') }}"
+                                 alt=""/>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% set base = '/bundles/nspurearth/images/classes_home.jpg' %}
+        {% set tall = '/bundles/nspurearth/images/classes_home_tall.jpg' %}
+        {% set lg = base|imagine_filter('fullscreen_lg') %}
+        {% set md = base|imagine_filter('fullscreen_md') %}
+        {% set sm = tall|imagine_filter('fullscreen_sm') %}
+        {% set xs = tall|imagine_filter('fullscreen_xs') %}
+        {% set mobile = tall|imagine_filter('fullscreen_mobile') %}
+        <section class="feature classes clearfix">
+            <div class="featureText col-xs-12 col-md-6">
+                <h2>Classes</h2>
+                {{ render(controller('NSPurearthBundle:Course:highlight')) }}
+                <a class="featureLink" href="{{ path('course_list') }}">See all of our classes <i
+                            class="fa fa-chevron-circle-right"></i></a>
+            </div>
+            <div class="featureLinks col-xs-12 col-md-6 p-r-0 p-l-0">
+                <img class="img-lg" src="{{ base }}" srcset="{{ base }} 1920w, {{ lg }} 1200w, {{ md }} 992w" alt=""/>
+                <img class="img-sm" src="{{ sm }}" srcset="{{ sm }} 768w, {{ xs }} 480w, {{ mobile }} 320w" alt=""/>
+            </div>
+        </section>
+        {% if featuredPost %}
+            {% do wordpress('setup_postdata', featuredPost) %}
+            <section class="feature video clearfix">
+                <div class="featureText col-xs-12 col-md-6">
+                    <h2>Featuring</h2>
+                    <h3>
+                        <a href="{{ path('wp_view', {'slug': featuredPost.post_name}) }}">{{ wordpress('get_the_title', featuredPost)|raw }}</a>
+                    </h3>
+                    <p>{{ wordpress('get_the_excerpt', featuredPost)|raw }}</p>
+                </div>
+                <div class="featureLinks col-xs-12 col-md-6 p-r-0 p-l-0">
+                    {% if featuredVideo[0] is defined %}
+                        <div class="video-container">
+                            {{ featuredVideo[0]|raw }}
+                        </div>
+                    {% else %}
+                        {{ wordpress('get_the_post_thumbnail', featuredPost)|raw }}
+                    {% endif %}
+                </div>
+            </section>
+        {% endif %}
+        <section class="feature specials clearfix">
+            {% set base_1 = '/bundles/nspurearth/images/specials_1.jpg' %}
+            {% set tall_1 = '/bundles/nspurearth/images/specials_1_tall.jpg' %}
+            {% set lg_1 = base_1|imagine_filter('fullscreen_lg') %}
+            {% set md_1 = base_1|imagine_filter('fullscreen_md') %}
+            {% set sm_1 = tall_1|imagine_filter('fullscreen_sm') %}
+            {% set xs_1 = tall_1|imagine_filter('fullscreen_xs') %}
+            {% set mobile_1 = tall_1|imagine_filter('fullscreen_mobile') %}
+            {% set base_2 = '/bundles/nspurearth/images/specials_2.jpg' %}
+            {% set tall_2 = '/bundles/nspurearth/images/specials_2_tall.jpg' %}
+            {% set lg_2 = base_2|imagine_filter('fullscreen_lg') %}
+            {% set md_2 = base_2|imagine_filter('fullscreen_md') %}
+            {% set sm_2 = tall_2|imagine_filter('fullscreen_sm') %}
+            {% set xs_2 = tall_2|imagine_filter('fullscreen_xs') %}
+            {% set mobile_2 = tall_2|imagine_filter('fullscreen_mobile') %}
+            {% set base = random([base_1, base_2]) %}
+            {% set tall = random([tall_1, tall_2]) %}
+            {% set lg = random([lg_1, lg_2]) %}
+            {% set md = random([md_1, md_2]) %}
+            {% set sm  = random([sm_1, sm_2]) %}
+            {% set xs = random([xs_1, xs_2]) %}
+            {% set mobile = random([mobile_1, mobile_2]) %}
+            <img class="img-lg" src="{{ base }}" srcset="{{ base }} 1920w, {{ lg }} 1200w, {{ md }} 992w" alt=""/>
+            <img class="img-sm" src="{{ sm }}" srcset="{{ sm }} 768w, {{ xs }} 480w, {{ mobile }} 320w" alt=""/>
+            <div class="featureText col-xs-12 col-md-6 col-lg-3">
+                <h2>Specials</h2>
+                <p>Take advantage of our limited-time sales, no coupons needed!</p>
+                <a class="featureLink" href="/specials">This week's specials <i class="fa fa-chevron-circle-right"></i></a>
+            </div>
+        </section>
+        <section class="feature newsletter clearfix">
+            <div class="featureText col-xs-12 col-md-6">
+                <h2>Get Our Newsletter</h2>
+                <p>It’s your regular feed of events, recipes, in other words all the healthy and helpful tidbits you’d expect from us!</p>
+            </div>
+            <div class="featureLinks col-xs-12 col-md-6">
+                {% include('NSPurearthBundle:Homepage:newsletter_signup.html.twig') %}
+            </div>
+        </section>
+    {% endblock %}
+{% endblock %}

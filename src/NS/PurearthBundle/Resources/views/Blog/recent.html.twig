@@ -1,0 +1,4 @@
+<h3>Recent Posts</h3>
+{% for post in recent %}
+    <p><a href="{{ path('wp_view', {'slug': post.post_name}) }}">{{ post.post_title }}</a></p>
+{% endfor %}

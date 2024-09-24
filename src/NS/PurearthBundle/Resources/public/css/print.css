@@ -1,0 +1,44 @@
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 12px;
+}
+
+header > .col-xs-12, .rightCol, footer, .sf-toolbar {
+    display: none !important;
+}
+
+header {
+    margin: 0;
+    padding: 0;
+}
+
+header > h1 {
+    position: absolute !important;
+    top: 0;
+    left: -20px;
+    width: 220px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+main > h1 {
+    padding-left: 220px !important;
+    height: 130px !important;
+    width: 100% !important;
+}
+
+main > h1 > span {
+    width: 100% !important;
+}
+
+
+h1 a:after {
+    display: none;
+}
+
+h2 a:after, h3 a:after, h4 a:after, h4 a:after, h6 a:after
+{
+    font-size: 10px;
+    font-weight: normal;
+}

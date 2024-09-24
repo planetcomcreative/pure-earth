@@ -1,0 +1,17 @@
+{% extends 'NSColorAdminBundle::base.html.twig' %}
+
+{% block sitename %}Purearth Organics{% endblock %}
+{% block sidebar_subtitle %}Admin Panel{% endblock %}
+{% block sidebar_navigation_header_title %}Products and Sales{% endblock %}
+{% block html_lang %}en{% endblock %}
+
+{% block additional_navigation %}
+    <ul class="nav">
+        <li class="nav-header">Website Administration</li>
+        {{ knp_menu_render('website_sidebar', {'template': 'NSColorAdminBundle:Menu:knp_menu.html.twig'}) }}
+    </ul>
+{% endblock %}
+
+{% block page_javascripts %}
+    <script type="text/javascript" src="{{ asset('/bundles/nspurearth/js/admin.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,8 @@
+NS\Purearth\Product\Juice:
+  1:
+    name: Test Juice
+    price: 24.99
+    description: This is the product description
+    summary: This is the product summary
+    gst: false
+    pst: false

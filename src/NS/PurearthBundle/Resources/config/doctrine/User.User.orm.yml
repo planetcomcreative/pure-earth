@@ -1,0 +1,77 @@
+NS\Purearth\User\User:
+  type: entity
+  table: users
+  repositoryClass: NS\Purearth\User\UserRepository
+  entityListeners:
+    NS\PurearthBundle\Listeners\TimestampListener:
+      preUpdate: [preUpdate]
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  oneToMany:
+    courseRegistrations:
+      targetEntity: NS\Purearth\Order\CourseRegistration
+      mappedBy: user
+      cascade: [persist, remove]
+  fields:
+    createdAt:
+      type: datetime
+    updatedAt:
+      type: datetime
+    lastName:
+      type: string
+      nullable: false
+    firstName:
+      type: string
+      nullable: false
+    email:
+      type: string
+      unique: true
+      nullable: false
+    password:
+      type: string
+      nullable: true
+    salt:
+      type: string
+      nullable: true
+    registeredOn:
+      type: datetime
+      nullable: true
+    lastLogin:
+      type: datetime
+      nullable: true
+    addrStreet:
+      type: string
+      nullable: true
+    addrCity:
+      type: string
+      nullable: true
+    addrProv:
+      type: string
+      nullable: true
+    addrPostal:
+      type: string
+      nullable: true
+    primaryPhone:
+      type: string
+      nullable: true
+    secondaryPhone:
+      type: string
+      nullable: true
+    admin:
+      type: boolean
+      nullable: true
+    confirmed:
+      type: boolean
+      nullable: true
+    confirmationToken:
+      type: string
+      nullable: true
+    resetToken:
+      type: string
+      nullable: true
+    mailchimpSubscriberHash:
+      type: string
+      nullable: true

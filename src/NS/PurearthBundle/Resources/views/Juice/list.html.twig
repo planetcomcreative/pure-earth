@@ -1,0 +1,68 @@
+{% extends 'NSPurearthBundle::product_list.html.twig' %}
+{% block title %}
+Cleanses
+{% endblock %}
+
+{% block listTitle %}
+{% endblock %}
+
+{% block noProductsMessageText %}
+    <p>Sorry, there are no juice cleanses currently available.</p>
+    <p>Please check back later.</p>
+{% endblock %}
+
+{% block intro %}
+    {% if sales is not empty %}
+        {% for sale in sales if sale%}
+            <div class="promoBox sale">
+                <img src="{{ '/bundles/nspurearth/images/sale.jpg'|imagine_filter('sale') }}" alt="" />
+                <div>
+                    <h3>{{ sale.name }}</h3>
+                    <p>{{ sale.description }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {{ render(controller('NSPurearthBundle:Default:content', {'slug':'JuiceIntro', 'template':'NSPurearthBundle:Content:embed.html.twig'})) }}
+{% endblock %}
+
+{% block productList %}
+    <div class="productList">
+        {% for category in items %}
+            {% set item = category['cat']|first %}
+            <div class="col-xs-12 col-sm-6 col-md-4 item">
+                {% set img = vich_uploader_asset(item['juice'], 'imageFile') %}
+                <div class="juiceImage">
+                    {% if img %}
+                    <a href="{{ url('juice_show', {'pid': item['juice'].id}) }}"><img src="{{ img|imagine_filter('juice_list_thumbnail') }}" alt="" /></a>
+                    {% endif %}
+                </div>
+                <strong class="itemName">
+                    <a href="{{ url('juice_show', {'pid': item['juice'].id}) }}">{{ item['juice'].name }}</a>
+                </strong>
+                {% if item['juice'].unit is defined %}
+                    <em class="itemUnit">
+                        {{ item['juice'].unit }}
+                    </em>
+                {% endif %}
+                <span class="price">
+                    ${{ category['low'] }}
+                    -
+                    ${{ category['high'] }}
+                </span>
+                {#{% block item_extra %}#}
+                    {#{% if is_granted('ROLE_CUSTOMER') %}#}
+                        {#{% if cart.getItems()[item.id] is defined %}#}
+                            {#<span class="btn disabled cartAdd">In Cart</span>#}
+                        {#{% else %}#}
+                            {#<a class="btn cartAdd" title="Add to cart" href="{{ url('cart_add', {'pid':item.id}) }}"><i class="fa fa-cart-plus"></i></a>#}
+                        {#{% endif %}#}
+                    {#{% endif %}#}
+                {#{% endblock %}#}
+                {% block itemSummary %}
+                    <p class="itemSummary">{{ item['juice'].summary }}</p>
+                {% endblock %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

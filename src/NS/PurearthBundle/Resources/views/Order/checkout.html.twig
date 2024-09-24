@@ -1,0 +1,204 @@
+{% extends 'NSPurearthBundle:Cart:view.html.twig' %}
+
+{% block pageScripts %}
+    {% if order.isChargable() %}
+        <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+        <script type="text/javascript" src="{{ asset('/bundles/nsstripe/js/payment.js') }}"></script>
+        <script type="text/javascript">
+            Stripe.setPublishableKey('{{ public_key }}');
+
+            {% if order.getOrderProducts()|length > 0 %}
+            var trackContent = {
+                value: {{ subtotal }},
+                num_items: {{ order.getOrderProducts()|length }},
+                content_ids: []
+            };
+
+            {% for orderProduct in order.getOrderProducts() %}
+            trackContent.content_ids.push({{ orderProduct.product.id }});
+            {% endfor %}
+
+            fbq('track', 'InitiateCheckout', trackContent);
+            {% endif %}
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block title %}
+    Checkout
+{% endblock %}
+
+{% block body %}
+    <form data-nsstripepayment data-button="#continueButton"
+          data-defaulttext='Complete Checkout <i class="fa fa-check"></i>'
+          data-loadingtext='Please Wait <i class="fa fa-hourglass"></i>' action="{{ path('checkout') }}" method="post">
+        <h3>{% block tableTitle %}Review Items{% endblock %}</h3>
+        <table class="table" id="manageCart">
+            <thead>
+            <tr>
+                <th>Item</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th></th>
+            </tr>
+            </thead>
+            {% if order.getOrderProducts()|length == 0 %}
+                <tbody>
+                <tr>
+                    <td colspan="4">
+                        <p>You do not currently have any items in your order.</p>
+                    </td>
+                </tr>
+            {% else %}
+                <tbody>
+                {% for orderProduct in order.getOrderProducts() %}
+                    <tr>
+                        <th>
+                            {{ orderProduct.product.name }}
+                        </th>
+                        <td>
+                            ${{ orderProduct.price|number_format(2) }}
+                        </td>
+                        <td>
+                            {{ orderProduct.quantity }}
+                        </td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            {% endif %}
+            <tfoot>
+            <tr>
+                <th></th>
+                <th>Subtotal</th>
+                <th>GST</th>
+                <th>Total</th>
+            </tr>
+            <tr>
+                <td>{% block modifyCart %}<a href="{{ path('cart_view') }}"><i class="fa fa-shopping-cart"></i> Modify
+                        Cart</a>{% endblock %}</td>
+                <th id="cartTotal">${{ subtotal|number_format(2) }}</th>
+                <td id="cartGst">${{ gst|number_format(2) }}</td>
+                <td><strong id="cartGrandTotal">${{ total|number_format(2) }}</strong></td>
+            </tr>
+            {% block delivery %}
+                {% if order.isShippable %}
+                    <tr>
+                        <td colspan="4">
+                            <h4>Delivery <i class="fa fa-truck"></i></h4>
+                            <p>We now offer flat-rate local delivery on our juice cleanses!</p>
+                            <label for="shipping"><strong>Delivery option:</strong></label>
+                            <div class="select-wrapper">
+                                <select id="delivery" name="checkout[delivery][delivery]">
+                                    <option value="0" selected>In-store pickup - Free</option>
+                                    <option value="1">Flat-rate local delivery -
+                                        ${{ shipping|number_format(2) }}</option>
+                                </select>
+                            </div>
+                            {% do checkout_form.delivery.delivery.setRendered() %}
+                        </td>
+                    </tr>
+                    <tr class="deliveryInfo" style="display:none;">
+                        <td colspan="3">
+                            <div class="form-horizontal">
+                                {{ form_rest(checkout_form.delivery) }}
+                            </div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr class="deliveryInfo" style="display:none;">
+                        <th colspan="3"></th>
+                        <th>Total ${{ (total+shipping)|number_format(2) }}</th>
+                    </tr>
+                {% else %}
+                    {% do checkout_form.delivery.setRendered %}
+                {% endif %}
+            {% endblock %}
+            </tfoot>
+        </table>
+        {% block courseRegistrations %}
+            {% if checkout_form.registrations is defined %}
+                <h3>Class Registrations</h3>
+                {% for cform in checkout_form.registrations.courses %}
+                    {% for reg in cform.newRegistrations %}
+                        <h4>{{ cform.vars.data.name }} &ndash; Registrant {{ loop.index }}</h4>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-10">
+                                <div class="form-horizontal">
+                                    {{ form_rest(reg) }}
+                                    <div class="form-row">
+                                        <label class="required requiredNote col-sm-9 col-sm-offset-3">Required
+                                            field</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {{ form_rest(cform) }}
+                {% endfor %}
+                {% if not app.user or not app.user.isSubscribed %}
+                    <div class="promoBox newsletter courseSignup">
+                        <p>Would you like to know about new classes?</p>
+                        <button id="checkout_newsletter_resubscribe" data-href="{{ path('subscribe') }}"
+                                class="btn"
+                                data-type="{{ constant('NS\\Purearth\\Stats\\Signup::TYPE_CHECKOUT') }}">
+                            Subscribe to our newsletter!
+                        </button>
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endblock %}
+        <hr/>
+        <h3>Special Requests</h3>
+        <div class="row special">
+            <div class="col-xs-12 col-sm-10">
+                <div class="form_horizontal">
+                    {% block requests %}
+                        <p>If you have any comments or special requests, please provide them, and we will do our best to accommodate.</p>
+                        {{ form_widget(checkout_form.comments) }}
+                        {{ form_errors(checkout_form.comments) }}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+        <hr/>
+        {% if order.isChargable() %}
+            <h3>Payment Information</h3>
+            <h3><a href="http://www.stripe.com" target="_blank"><img
+                            src="{{ asset('/bundles/nsstripe/images/stripe.png') }}" alt="Powered by Stripe"/></a></h3>
+        {% endif %}
+        <div class="row">
+            {% block paymentData %}
+                <div class="col-xs-12 col-sm-10">
+                    <div class="form-horizontal">
+                        {% if order.isChargable() %}
+                            {{ form_row(cc_form.name, {'attr':{'class':'no-form-control'}}) }}
+                            {{ form_row(cc_form.number) }}
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-4 form-control-label--required">Expiry</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <div class="select-wrapper">{{ form_widget(cc_form.expiryMonth) }}</div>
+                                    <div class="select-wrapper">{{ form_widget(cc_form.expiryYear) }}</div>
+                                </div>
+                            </div>
+                            {{ form_row(cc_form.cvv, {attr:{class:'input-short col-sm-3'}}) }}
+                        {% endif %}
+                        <div class="form-row">
+                            <div class="col-sm-4 pull-right text-right">
+                                <button id="continueButton" type="submit" class="btn">Complete Checkout <i
+                                            class="fa fa-check"></i></button>
+                                <br/>
+                                {% if order.isChargable() %}
+                                    <p>Your card will be billed.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+        </div>
+        {% block checkout_rest %}
+            {{ form_rest(checkout_form) }}
+        {% endblock %}
+    </form>
+{% endblock %}

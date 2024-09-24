@@ -1,0 +1,31 @@
+---
+- hosts: "{{ target }}"
+  user: root
+  become: true
+  become_user: apache
+  vars:
+    symfony_project_root: /var/www/vhosts/purearthorganics.com
+    symfony_project_name: purearthorganics
+    symfony_project_repo: git@gitlab.com:purearthorganics/website.git
+    symfony_project_branch: master
+    symfony_project_composer_path: /var/www/vhosts/purearthorganics.com/shared/composer.phar
+    symfony_project_env: prod
+    symfony_project_php_path: /usr/bin/php74
+    symfony_project_composer_opts: '--no-dev --optimize-autoloader --no-interaction'
+    symfony_project_console_command: 'bin/console' # sf >= 3.0 bin/console
+    symfony_project_parameters_file: parameters.yml
+    symfony_project_shared_folders: # folders to be linked from shared directory to release dir
+      - {name: logs, src: var/logs, path: var/logs}
+      - {name: uploads, src: web/uploads, path: web/uploads}
+      - {name: peblog, src: web/peblog, path: web/peblog}
+    symfony_project_managed_folders: # folderst to be created/checked in release dir
+      - {name: cache, path: var/cache}
+  roles:
+    - servergrove.symfony2
+  tasks:
+    - name: Run database migrations
+      command: "{{symfony_project_php_path}} bin/console doctrine:migrations:migrate --no-interaction --env=prod chdir={{symfony_project_root}}/current"
+    -   name: Reload php-fpm
+        systemd: name=php74-php-fpm state=reloaded
+        become: false
+        ignore_errors: true

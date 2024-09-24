@@ -1,0 +1,21 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends 'SonataAdminBundle:CRUD:base_show_field.html.twig' %}
+
+{% block field %}
+    <ul class="sonata-ba-show-one-to-many">
+        {% set route_name = field_description.options.route.name %}
+        {% for orderProduct in object.getOrderProducts(true) %}
+                <li>{{ orderProduct.product }} {{ orderProduct.product.productCategory is defined ? ('&ndash; '~ orderProduct.product.productCategory)|raw : '' }} | {{ orderProduct.quantity }} @ ${{ orderProduct.price|number_format(2) }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

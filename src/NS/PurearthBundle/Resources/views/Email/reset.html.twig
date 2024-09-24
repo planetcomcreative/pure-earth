@@ -1,0 +1,8 @@
+{% extends 'NSPurearthBundle::email.html.twig' %}
+
+{% block body %}
+    <h1>Hello, {{ user.firstName }}</h1>
+    <h2>We have received a request to reset your Purearth Organics login password.</h2>
+    <p>To reset your password, please follow the instructions at this link:</p>
+    <p><a href="{{ url('resetPassword', {'token':token}) }}">{{ url('resetPassword', {'token':token}) }}</a></p>
+{% endblock %}

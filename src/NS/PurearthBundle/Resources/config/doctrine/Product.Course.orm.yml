@@ -1,0 +1,25 @@
+NS\Purearth\Product\Course:
+  type: entity
+  repositoryClass: NS\Purearth\Product\CourseRepository
+  oneToMany:
+    courseRegistrations:
+      targetEntity: NS\Purearth\Order\CourseRegistration
+      mappedBy: course
+      cascade: [persist, remove]
+  fields:
+    date:
+      type: date
+      nullable: false
+    startTime:
+      type: time
+      nullable: false
+    endTime:
+      type: time
+      nullable: false
+    maxSeats:
+      type: integer
+    registrationCutoff:
+      type: datetime
+    subtitle:
+      type: string
+      nullable: true

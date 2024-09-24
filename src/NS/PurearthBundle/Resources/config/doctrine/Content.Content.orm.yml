@@ -1,0 +1,24 @@
+NS\Purearth\Content\Content:
+  type: entity
+  table: content
+  entityListeners:
+    NS\PurearthBundle\Listeners\TimestampListener:
+      preUpdate: [preUpdate]
+    NS\PurearthBundle\Listeners\ContentListener:
+      prePersist: [prePersist]
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    createdAt:
+      type: datetime
+    updatedAt:
+      type: datetime
+    title:
+      type: string
+    content:
+      type: text
+    slug:
+      type: string

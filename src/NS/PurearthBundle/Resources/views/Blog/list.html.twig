@@ -1,0 +1,19 @@
+{% extends 'NSPurearthBundle::layout.html.twig' %}
+
+{% block body %}
+    {% if post is defined %}
+        {% include 'NSPurearthBundle:Blog:view.html.twig' with {'post':post, 'next_post':next_post, 'previous_post':previous_post} %}
+    {% elseif tagged_posts is defined %}
+        {% include 'NSPurearthBundle:Blog:tag.html.twig' with {'tagged_posts':tagged_posts, 'tag':tag} %}
+    {% else %}
+        {% include 'NSPurearthBundle:Blog:index.html.twig' with {'posts':posts, 'total_pages':total_pages, 'page':wp_page} %}
+    {% endif %}
+{% endblock %}
+{% block profile %}
+{% endblock %}
+
+{% block blogRecent %}
+    <div class="promoBox blogRecent">
+        {{ render(controller('NSPurearthBundle:Blog:recent')) }}
+    </div>
+{% endblock %}

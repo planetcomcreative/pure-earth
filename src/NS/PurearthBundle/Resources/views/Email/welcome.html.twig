@@ -1,0 +1,8 @@
+{% extends 'NSPurearthBundle::email.html.twig' %}
+
+{% block body %}
+<h1>Hello, {{ user.firstName }}</h1>
+<h2>Thank you for registering with Purearth Organics!</h2>
+<p>To complete your registration, please click the following link to confirm your account:</p>
+<p><a href="{{ url('confirmation_confirm', {'token':user.confirmationToken}) }}">{{ url('confirmation_confirm', {'token':user.confirmationToken}) }}</a></p>
+{% endblock %}

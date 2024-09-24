@@ -1,0 +1,10 @@
+services:
+  nswordpressbundle.wordpress:
+    class: NS\WordpressBundle\Service\WordpressService
+    arguments: ["%ns_wordpress.wordpress_path%", "@router"]
+
+  nswordpressbundle.twig.wordpress_extension:
+    class: NS\WordpressBundle\Twig\NSWordpressExtension
+    arguments: ["@nswordpressbundle.wordpress"]
+    tags:
+      - { name: twig.extension }

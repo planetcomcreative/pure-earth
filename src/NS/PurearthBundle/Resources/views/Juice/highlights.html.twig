@@ -1,0 +1,14 @@
+{% if juices|length %}
+<div class="featureLinks col-xs-12 col-md-6">
+    <div class="featureLinksScroll">
+        {% for juice in juices %}
+            <a href="{{ path('juice_show', {'pid':juice.id}) }}" title="{{ juice.name }} - ${{ juice.price }}">
+                {% set img = vich_uploader_asset(juice, 'imageFile') %}
+                {% if img %}
+                <img src="{{ img|imagine_filter('juice_highlight_thumbnail') }}" alt="" />
+                {% endif %}
+            </a>
+        {%  endfor %}
+    </div>
+</div>
+{% endif %}
